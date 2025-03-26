@@ -1,5 +1,7 @@
 package no.hvl.dat109;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -13,84 +15,71 @@ public class Forelesning {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int forelesningId;
-	
-	private String emnekode;
-
 	private int forelesningsnr;
 	
-	private String foreleser;
+	private Lektor lektor;
+	
+	private LocalDate dato;
+	private LocalTime tidFra;
+	private LocalTime tidTil;
 	
 	@OneToMany(mappedBy = "forelesning")
 	private List<Tilbakemelding> tilbakemeldinger;
 	
-	public Forelesning() {
-		
+	public Forelesning(Lektor lektor, LocalDate dato, LocalTime tidFra, LocalTime tidTil) {
+		this.lektor = lektor;
+		this.dato = dato;
+		this.tidFra = tidFra;
+		this.tidTil = tidTil;
 	}
 	
-	public Forelesning(String e, int nr) {
-		emnekode = e;
-		forelesningsnr = nr;
-		foreleser = null;
-	}
-	
-	public Forelesning(String e, int nr, String f) {
-		emnekode = e;
-		forelesningsnr = nr;
-		foreleser = f;
-	}
-	
-	public String getEmnekode() {
-		return emnekode;
-	}
-
-
-
-	public void setEmnekode(String emnekode) {
-		this.emnekode = emnekode;
-	}
-
-
-
 	public int getForelesningsnr() {
 		return forelesningsnr;
 	}
 
-
-
-	public void setForelesningsnr(int forelesningsnr) {
-		this.forelesningsnr = forelesningsnr;
+	public Lektor getLektor() {
+		return lektor;
 	}
 
+	public void setLektor(Lektor lektor) {
+		this.lektor = lektor;
+	}
+	
 
-
-	public String getForeleser() {
-		return foreleser;
+	public LocalDate getDato() {
+		return dato;
 	}
 
-
-
-	public void setForeleser(String foreleser) {
-		this.foreleser = foreleser;
+	public LocalTime getTidFra() {
+		return tidFra;
 	}
 
+	public LocalTime getTidTil() {
+		return tidTil;
+	}
 
+	public List<Tilbakemelding> getTilbakemeldinger() {
+		return tilbakemeldinger;
+	}
 
 	public List<Tilbakemelding> getTilbakemelding() {
 		return tilbakemeldinger;
 	}
-
-
-
-	public void setTilbakemelding(List<Tilbakemelding> tilbakemeldinger) {
-		this.tilbakemeldinger = tilbakemeldinger;
+	
+	public boolean registrerTilbakemelding(Tilbakemelding tilbakemelding) {
+		int brukernavn = tilbakemelding.getStudent().getBrukernavn();
+		for (Tilbakemelding tm : tilbakemeldinger) {
+			if (brukernavn == tm.getStudent().getBrukernavn()) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
 	public String toString() {
 		String s = "Forelesningsnr: " + forelesningsnr + "\n" +
-				   "Emnekode: " + emnekode + "\n" +
-				   "Foreleser: " + foreleser + "\n";
+				   "Lektor: " + lektor + "\n";
 		
 		for(Tilbakemelding t : tilbakemeldinger) {
 			s += t.toString();
@@ -98,26 +87,5 @@ public class Forelesning {
 		
 		return s;
 	}
-	
-	public void registrerTilbakemelding(Tilbakemelding t) {
-		
-		if(!sjekkGittTilbakemelding(t.getStudentId())) {
-			tilbakemeldinger.add(t);
-		}
-	}
-	
-	public boolean sjekkGittTilbakemelding(int studentId) {
-
-		for(Tilbakemelding t : tilbakemeldinger) {
-			if(t.getStudentId() == studentId) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
-	
-	
 }
 

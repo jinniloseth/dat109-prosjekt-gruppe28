@@ -5,14 +5,14 @@ import java.util.List;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
-public class Student {
+public class Lektor {
 
 	private int brukernavn;
 	
 	@ManyToMany() //må fikses
 	private List<Emne> emner;
 	
-	public Student(int brukernavn, List<Emne> emner) {
+	public Lektor(int brukernavn, List<Emne> emner) {
 		this.brukernavn = brukernavn;
 		this.emner = emner;
 	}
@@ -31,7 +31,7 @@ public class Student {
 	
 	@Override
 	public String toString() {
-		String s = "Student Id: " + brukernavn;
+		String s = "Brukernavn: " + brukernavn;
 		
 		for(Emne e : emner) {
 			s += e.getEmnekode() + " \n";

@@ -17,18 +17,15 @@ public class Tilbakemelding {
 	private int tilbakemelding;
 	
 	@ManyToOne
-	private int studentId;
-	
-	@ManyToOne
-	private int emnekode;
+	private Student student;
 	
 	public Tilbakemelding() {
 		
 	}
 	
-	public Tilbakemelding(int t, int id) {
+	public Tilbakemelding(int t, Student student) {
 		tilbakemelding = t;
-		studentId = id;
+		this.student = student;
 	}
 
 	public int getTilbakemelding() {
@@ -39,27 +36,14 @@ public class Tilbakemelding {
 		this.tilbakemelding = tilbakemelding;
 	}
 
-	public int getStudentId() {
-		return studentId;
-	}
-
-	public void setStudentId(int studentId) {
-		this.studentId = studentId;
-	}
-
-	public int getEmneKode() {
-		return emnekode;
-	}
-
-	public void setEmneKode(int emnekode) {
-		this.emnekode = emnekode;
+	public Student getStudent() {
+		return student;
 	}
 
 	@Override
 	public String toString() {
 		return "Tilbakemelding: " + tilbakemelding + "\n" +
-			   "StudentId " + studentId + "\n" + 
-			   "Emnekode " + emnekode + "\n";
+			   "Student " + student.getBrukernavn() + "\n";
 	}
 	
 	
