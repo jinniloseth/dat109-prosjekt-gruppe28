@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import no.hvl.dat109.Forelesning;
-import no.hvl.dat109.repo.ForelesningRepo;
+import no.hvl.dat109.repo.EmneRepo;
 
 @Controller
 public class VurderingController {
 
 	@Autowired
-	ForelesningRepo forelesningRepository;
+	EmneRepo emneRepo;
 
 //	@Autowired
 //	PassordService passordService = new PassordService();
@@ -75,7 +75,7 @@ public class VurderingController {
 	public String sendVurderingSkjema(Model model, RedirectAttributes ra){
 		
 		
-		forelesningRepository.save(forelensing objekt);
+		emneRepo.save(forelensing, objekt);
 		
 		
 		return "vurderingskjema";

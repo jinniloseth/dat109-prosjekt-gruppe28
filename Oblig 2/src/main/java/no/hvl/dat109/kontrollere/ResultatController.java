@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import no.hvl.dat109.Forelesning;
 import no.hvl.dat109.Tilbakemeldingsystem;
-import no.hvl.dat109.repo.ForelesningRepo;
+import no.hvl.dat109.repo.EmneRepo;
 
 @Controller
 public class ResultatController {
 
 	@Autowired
-	ForelesningRepo forelesningRepository;
+	EmneRepo emneRepo;
 //
 //	@Autowired
 //	PassordService passordService = new PassordService();
@@ -30,7 +30,7 @@ public class ResultatController {
 		model.addAttribute("emnekode", emnekode);
 		model.addAttribute("forelesningsnr", forelesningsnr);
 
-		List<Forelesning> forelesninger = forelesningRepository.findByEmnekode(emnekode);
+		List<Forelesning> forelesninger = emneRepo.findByEmnekode(emnekode);
 		
 		Forelesning f = forelesninger.stream()
 						.filter(fo -> fo.getEmnekode().equals(emnekode))

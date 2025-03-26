@@ -6,73 +6,27 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import jakarta.persistence.OneToMany;
-import no.hvl.dat109.repo.ForelesningRepo;
+import no.hvl.dat109.repo.EmneRepo;
 
 public class Tilbakemeldingsystem {
 	
 	@Autowired
-	ForelesningRepo forelesningRepository;
-	
-	@OneToMany
-	private List<Forelesning> forelesninger;
+	EmneRepo emneRepo;
 	
 	@OneToMany
 	private List<Student> studenter;
 	
-	private List<String> alleEmnekoder = List.of("DAT100", "MAT101", "ING100",
-												 "DAT102", "DAT107", "MAT104", "MAT110",
-												 "DAT108", "DAT103", "MAT102",
-												 "DAT110", "DAT109", "ING164");
-	
 	public Tilbakemeldingsystem() {
 
 	}
-	
-	
-	
-	public List<Forelesning> getForelesninger() {
-		return forelesninger;
-	}
-
-
-
-	public void setForelesninger(List<Forelesning> forelesninger) {
-		this.forelesninger = forelesninger;
-	}
-
-
-
-	public List<Student> getStudenter() {
-		return studenter;
-	}
-
-
-
-	public void setStudenter(List<Student> studenter) {
-		this.studenter = studenter;
-	}
-
-
-
-	public List<String> getAlleEmnekoder() {
-		return alleEmnekoder;
-	}
-
-
-
-	public void setAlleEmnekoder(List<String> alleEmnekoder) {
-		this.alleEmnekoder = alleEmnekoder;
-	}
-
-	
 
 	@Override
 	public String toString() {
 		String s = "Tilbakemeldingsystem: \n";
 		
 		
-		for(Forelesning f : forelesninger) {
-			s += f.toString() + " \n";
+		for(Emne emne : emner) {
+			s += emne.toString() + " \n";
 		}
 		
 		for(Student st : studenter) {
@@ -88,13 +42,10 @@ public class Tilbakemeldingsystem {
 
 
 
-	public HashMap<String, Integer> getResultatEnkelForelesning(String emnekode, int forelesningsnr) {
+	public double getResultat(String emnekode, int forelesningsnr) {
+		return finnEmne(emnekode).getResultat(int forelesningsnr);
 
-		HashMap<String, Integer> resultat = null;
-		
-		resultat.put("Bra", 0);
-		resultat.put("Middels", 0);
-		resultat.put("Dårlig", 0);
+		double resultat = null;
 		
 		Forelesning fo = forelesningRepository.findByEmnekodeAndForelesningsnr(emnekode, forelesningsnr);
 		
@@ -107,13 +58,7 @@ public class Tilbakemeldingsystem {
 		List<Tilbakemelding> tilbakemeldinger = fo.getTilbakemelding();
 		
 		for(Tilbakemelding t : tilbakemeldinger) {
-			if(t.getTilbakemelding() == 1) {
-				resultat.merge("Bra", 1, Integer::sum);
-			} else if(t.getTilbakemelding() == 2) {
-				resultat.merge("Middels", 1, Integer::sum);
-			} else {
-				resultat.merge("Dårlig", 1, Integer::sum);
-			}
+			resultat += t.getTilbakemelding();
 		}
 		
 		
@@ -137,6 +82,13 @@ public class Tilbakemeldingsystem {
 //		
 //	}
 	
-	
+	private Emne finnEmne(String emnekode) {
+		for (Emne e : emner) {
+			if (emnekode.equals(e.getEmnekode())) {
+				return e;
+			}
+		}
+		return null;
+	}
 	
 }

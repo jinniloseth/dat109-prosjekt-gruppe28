@@ -2,52 +2,43 @@ package no.hvl.dat109;
 
 import java.util.List;
 
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
 public class Student {
 
 	private int studentId;
 	
-	@OneToMany
-	private List<String> emnekoder;
+	@ManyToMany() //må fikses
+	private List<Emne> emner;
 	
 	public Student() {
 		
 	}
 	
-	public Student(int studentId) {
+	public Student(int studentId, List<Emne> emner) {
 		this.studentId = studentId;
-		this.emnekoder = List.of();
-	}
-	
-	
-	public Student(int studentId, List<String> emnekoder) {
-		this.studentId = studentId;
-		this.emnekoder = emnekoder;
+		this.emner = emner;
 	}
 
 	public int getStudentId() {
 		return studentId;
 	}
 
-	public void setStudentId(int studentId) {
-		this.studentId = studentId;
+	public List<Emne> getEmner() {
+		return emner;
 	}
 
-	public List<String> getEmnekoder() {
-		return emnekoder;
-	}
-
-	public void setEmnekoder(List<String> emnekoder) {
-		this.emnekoder = emnekoder;
+	public void setEmner(List<Emne> emner) {
+		this.emner = emner;
 	}
 	
 	@Override
 	public String toString() {
 		String s = "Student Id: " + studentId;
 		
-		for(String e : emnekoder) {
-			s += e + " \n";
+		for(Emne e : emner) {
+			s += e.getEmnekode() + " \n";
 		}
 		
 		return s;
