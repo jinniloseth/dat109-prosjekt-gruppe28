@@ -11,7 +11,7 @@ public class Tilbakemelding {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int tilbakemeldingId;
+    private int tilbakemeldingID;
 	
 	@ManyToOne
 	private int tilbakemelding;
@@ -19,21 +19,17 @@ public class Tilbakemelding {
 	@ManyToOne
 	private Student student;
 	
-	public Tilbakemelding() {
-		
-	}
-	
 	public Tilbakemelding(int t, Student student) {
 		tilbakemelding = t;
 		this.student = student;
 	}
 
+	public int getTilbakemeldingID() {
+		return tilbakemeldingID;
+	}
+	
 	public int getTilbakemelding() {
 		return tilbakemelding;
-	}
-
-	public void setTilbakemelding(int tilbakemelding) {
-		this.tilbakemelding = tilbakemelding;
 	}
 
 	public Student getStudent() {

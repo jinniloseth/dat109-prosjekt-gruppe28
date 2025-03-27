@@ -12,39 +12,29 @@ import jakarta.persistence.OneToMany;
 
 @Entity
 public class Forelesning {
-	
+
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int forelesningsnr;
-	
-	private Lektor lektor;
-	
+
+	// en forelesning må ha en lektor?
+
 	private LocalDate dato;
 	private LocalTime tidFra;
 	private LocalTime tidTil;
-	
+
 	@OneToMany(mappedBy = "forelesning")
 	private List<Tilbakemelding> tilbakemeldinger;
-	
-	public Forelesning(Lektor lektor, LocalDate dato, LocalTime tidFra, LocalTime tidTil) {
-		this.lektor = lektor;
+
+	public Forelesning(LocalDate dato, LocalTime tidFra, LocalTime tidTil) {
 		this.dato = dato;
 		this.tidFra = tidFra;
 		this.tidTil = tidTil;
 	}
-	
+
 	public int getForelesningsnr() {
 		return forelesningsnr;
 	}
-
-	public Lektor getLektor() {
-		return lektor;
-	}
-
-	public void setLektor(Lektor lektor) {
-		this.lektor = lektor;
-	}
-	
 
 	public LocalDate getDato() {
 		return dato;
@@ -58,14 +48,6 @@ public class Forelesning {
 		return tidTil;
 	}
 
-	public List<Tilbakemelding> getTilbakemeldinger() {
-		return tilbakemeldinger;
-	}
-
-	public List<Tilbakemelding> getTilbakemelding() {
-		return tilbakemeldinger;
-	}
-	
 	public boolean registrerTilbakemelding(Tilbakemelding tilbakemelding) {
 		int brukernavn = tilbakemelding.getStudent().getBrukernavn();
 		for (Tilbakemelding tm : tilbakemeldinger) {
@@ -73,19 +55,35 @@ public class Forelesning {
 				return false;
 			}
 		}
+
+		tilbakemeldinger.add(tilbakemelding);
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		String s = "Forelesningsnr: " + forelesningsnr + "\n" +
-				   "Lektor: " + lektor + "\n";
-		
-		for(Tilbakemelding t : tilbakemeldinger) {
+		String s = "Forelesningsnr: " + forelesningsnr + "\n" + "Lektor: "; // må fikses
+
+		for (Tilbakemelding t : tilbakemeldinger) {
 			s += t.toString();
 		}
-		
+
 		return s;
 	}
-}
 
+	public double getResultat() {
+		double sum = 0;
+		for (Tilbakemelding t : tilbakemeldinger) {
+			sum += t.getTilbakemelding();
+		}
+		return sum / (double) tilbakemeldinger.size();
+	}
+
+	public double getResultat(int tilbakemeldingID) {
+		for (Tilbakemelding t : tilbakemeldinger) {
+			if (tilbakemeldingID == t.getTilbakemeldingID())
+				return t.getTilbakemelding();
+		}
+		return 0;
+	}
+}

@@ -15,24 +15,39 @@ public class Emne {
 	@Id
 	private String emnekode;
 	
+	private String navn;
+	
 	@ManyToOne
 	List<Forelesning> forelesninger;
 
-	public Emne(String emnekode, List<Forelesning> forelesninger) {
+	public Emne(String emnekode, String navn, List<Forelesning> forelesninger) {
 		this.emnekode = emnekode;
+		this.navn = navn;
 		this.forelesninger = forelesninger;
 	}
 	
-	public void getResultatForelesning(String emnekode) {
-		Emne emne = emneRepo.findByEmnekode(emnekode);
-		
+	public double getResultat() {
+		double sum = 0;
+		for (Forelesning f : forelesninger) {
+			sum += f.getResultat();
+		}
+		return sum;
 	}
 	
-	public double getResultat(int forelesningsID) {
-		return 
+	public double getResultat(int forelesningsnr) {
+		for (Forelesning f : forelesninger) {
+			if (forelesningsnr == f.getForelesningsnr()) {
+				return f.getResultat();
+			}
+		}
+		return 0;
 	}
 	
-	public void giVurdering(int studentID, int tilbakemelding) {
+	public String getNavn() {
+		return navn;
+	}
+	
+	public void giVurdering(int studentID, int tilbakemelding, int forelesningsID) {
 		
 		
 	}

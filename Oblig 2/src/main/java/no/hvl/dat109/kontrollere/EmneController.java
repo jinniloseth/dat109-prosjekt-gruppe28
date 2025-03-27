@@ -15,32 +15,17 @@ import no.hvl.dat109.Forelesning;
 import no.hvl.dat109.Student;
 import no.hvl.dat109.Tilbakemelding;
 import no.hvl.dat109.repo.EmneRepo;
+import no.hvl.dat109.repo.StudentRepo;
 
 public class EmneController {
 	
 	@Autowired
 	EmneRepo emneRepo;
 	
-	@OneToMany
-	private List<Student> studenter;
+	@Autowired
+	StudentRepo studentRepo;
 	
 	public EmneController() {
-	}
-
-	@Override
-	public String toString() {
-		String s = "EmneController: \n";
-		
-		
-//		for(Emne emne : emner) {
-//			s += emne.toString() + " \n";
-//		}
-		
-		for(Student st : studenter) {
-			s += st.toString() + " \n";
-		}
-		
-		return s;
 	}
 	
 	@GetMapping("/innlogging")
@@ -52,7 +37,7 @@ public class EmneController {
 	public String loggInn(Model model, String type, String brukernavn) {
 		int bn = Integer.parseInt(brukernavn);
 		if (type.toLowerCase().contains("student")) {
-			Student s = finnStudent(bn);
+			Student s = studentRepo.finnStudent(bn);
 			if (s != null) {
 				model.addAttribute(s);
 				return "redirect:oversikt"; // skal vise oversikt over fag, så skal man kunne velge fag
@@ -61,32 +46,34 @@ public class EmneController {
 		return "innlogging";
 	}
 	
-	private Student finnStudent(int bn) {
-		for (Student s : studenter) {
-			if (bn == s.getBrukernavn()) {
-				return s;
-			}
+	@GetMapping("/oversikt")
+	public String visFag(Model model) {
+		String s = (String) model.getAttribute("studentID");
+		Student student = studentRepo.findById(Integer.parseInt(s)).orElse(null);
+		if (student != null) {
+			model.addAttribute("emner", student.getEmner());
 		}
-		return null;
-	}
-
-	@GetMapping("/resultat")
-	public String getResultat(Model model, @RequestParam String emnekode, @RequestParam int forelesningsnr) {
-		model.addAttribute("emnekode", emnekode);
-		model.addAttribute("forelesningsnr", forelesningsnr);
-
-		Emne emne = emneRepo.findByEmnekode(emnekode);
 		
-		for (Forelesning f : emne.ge)
-
-		if (f != null) {
-			model.addAttribute("forelesning", f);
-		}
-
-		model.addAllAttributes(resultat);
-
-		return "ressultat";
+		return "oversikt";
 	}
+
+//	@GetMapping("/resultat")
+//	public String getResultat(Model model, @RequestParam String emnekode, @RequestParam int forelesningsnr) {
+//		model.addAttribute("emnekode", emnekode);
+//		model.addAttribute("forelesningsnr", forelesningsnr);
+//
+//		Emne emne = emneRepo.findByEmnekode(emnekode);
+//		
+//		for (Forelesning f : emne.ge)
+//
+//		if (f != null) {
+//			model.addAttribute("forelesning", f);
+//		}
+//
+//		model.addAllAttributes(resultat);
+//
+//		return "ressultat";
+//	}
 	
 //	public double getResultat(String emnekode, int forelesningsnr) {
 //		return finnEmne(emnekode).getResultat(int forelesningsnr);
@@ -129,21 +116,21 @@ public class EmneController {
 //	}
 	
 	
-	@GetMapping("/vurderingskjema")
-	public String vurderingsSkjema(Model model, @RequestParam String emnekode, @RequestParam int forelesningsnr) {
-		model.addAttribute("emnekode", emnekode);
-		model.addAttribute("forelesningsnr", forelesningsnr);
-		return "vurderingskjema";
-	}
-	
-	@PostMapping("/vurderingskjema")
-	public String sendVurderingSkjema(Model model, RedirectAttributes ra){
-		
-		
-		emneRepo.save(forelensing, objekt);
-		
-		
-		return "vurderingskjema";
-	}
+//	@GetMapping("/vurderingskjema")
+//	public String vurderingsSkjema(Model model, @RequestParam String emnekode, @RequestParam int forelesningsnr) {
+//		model.addAttribute("emnekode", emnekode);
+//		model.addAttribute("forelesningsnr", forelesningsnr);
+//		return "vurderingskjema";
+//	}
+//	
+//	@PostMapping("/vurderingskjema")
+//	public String sendVurderingSkjema(Model model, RedirectAttributes ra){
+//		
+//		
+//		emneRepo.save(forelensing, objekt);
+//		
+//		
+//		return "vurderingskjema";
+//	}
 	
 }
