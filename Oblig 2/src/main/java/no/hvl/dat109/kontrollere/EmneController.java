@@ -1,5 +1,6 @@
 package no.hvl.dat109.kontrollere;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,26 +19,26 @@ import no.hvl.dat109.repo.EmneRepo;
 import no.hvl.dat109.repo.PersonRepo;
 
 public class EmneController {
-	
+
 	@Autowired
 	EmneRepo emneRepo;
-	
+
 	@Autowired
-	PersonRepo studentRepo;
-	
+	PersonRepo personRepo;
+
 	public EmneController() {
 	}
-	
+
 	@GetMapping("/innlogging")
 	public String visInnlogging() {
 		return "innlogging";
 	}
-	
+
 	@PostMapping("/innlogging")
 	public String loggInn(Model model, String type, String brukernavn) {
 		int bn = Integer.parseInt(brukernavn);
 		if (type.toLowerCase().contains("student")) {
-			Person s = studentRepo.finnPerson(bn);
+			Person s = personRepo.findById(bn).orElse(null);
 			if (s != null) {
 				model.addAttribute(s);
 				return "redirect:oversikt"; // skal vise oversikt over fag, så skal man kunne velge fag
@@ -45,29 +46,37 @@ public class EmneController {
 		}
 		return "innlogging";
 	}
-	
+
+	public boolean giVurdering(String emnekode, String semester, int forelesningsnr, int tilbakemelding,
+			int brukernavn) {
+		Emne emne = finnEmne(emnekode, semester);
+		Person student = personRepo.findById(brukernavn).orElse(null);
+		if (emne != null && student != null && student.harEmne(emne) && !student.erLektor()) {
+			return emne.giVurdering(forelesningsnr, tilbakemelding, student);
+		}
+		return false;
+	}
+
 	@GetMapping("/oversikt")
-	public String visFag(Model model) {
-		String s = (String) model.getAttribute("studentID");
-		Person student = studentRepo.findById(Integer.parseInt(s)).orElse(null);
+	public String visEmner(Model model) {
+		String s = (String) model.getAttribute("brukernavn");
+		Person student = personRepo.findById(Integer.parseInt(s)).orElse(null);
 		if (student != null) {
 			model.addAttribute("emner", student.getEmner());
 		}
-		
+
 		return "oversikt";
 	}
-	
-	public Emne finnEmne(String emnekode, String semester) {
+
+	private Emne finnEmne(String emnekode, String semester) {
 		List<Emne> emner = emneRepo.findAll();
 		for (Emne e : emner) {
-			if(emnekode.equals(e.getEmnekode()) && semester.equals(e.getSemester())) {
+			if (emnekode.equals(e.getEmnekode()) && semester.equals(e.getSemester())) {
 				return e;
 			}
 		}
 		return null;
 	}
-	
-	public boolean opprettForelesning(String emnekode, String semester, )
 
 //	@GetMapping("/resultat")
 //	public String getResultat(Model model, @RequestParam String emnekode, @RequestParam int forelesningsnr) {
@@ -86,7 +95,7 @@ public class EmneController {
 //
 //		return "ressultat";
 //	}
-	
+
 //	public double getResultat(String emnekode, int forelesningsnr) {
 //		return finnEmne(emnekode).getResultat(int forelesningsnr);
 //
@@ -109,7 +118,7 @@ public class EmneController {
 //		
 //		return resultat;
 //	}
-	
+
 //	public void giVurdering(int studentId, String emnekode, int forelesningsnr, int tilbakemelding){
 //		Forelesning f = forelesninger.stream()
 //									 .filter(fo -> fo.getEmnekode().equals(emnekode))
@@ -122,12 +131,11 @@ public class EmneController {
 //			f.registrerTilbakemelding(t);
 //		}
 //	}
-	
+
 //	public List<Tilbakemelding> getTilbakemeldinger(String emnekode){
 //		
 //	}
-	
-	
+
 //	@GetMapping("/vurderingskjema")
 //	public String vurderingsSkjema(Model model, @RequestParam String emnekode, @RequestParam int forelesningsnr) {
 //		model.addAttribute("emnekode", emnekode);
@@ -144,5 +152,5 @@ public class EmneController {
 //		
 //		return "vurderingskjema";
 //	}
-	
+
 }

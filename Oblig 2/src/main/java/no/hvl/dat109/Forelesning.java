@@ -19,12 +19,14 @@ public class Forelesning {
 
 	// en forelesning må ha en lektor?
 	private LocalDate dato;
+	private String tittel;
 
 	@OneToMany(mappedBy = "forelesning")
 	private List<Tilbakemelding> tilbakemeldinger;
 
-	public Forelesning(LocalDate dato) {
+	public Forelesning(LocalDate dato, String tittel) {
 		this.dato = dato;
+		this.tittel = tittel;
 	}
 
 	public int getForelesningsnr() {
@@ -34,7 +36,11 @@ public class Forelesning {
 	public LocalDate getDato() {
 		return dato;
 	}
-
+	
+	public String getTittel() {
+		return tittel;
+	}
+	
 	public boolean registrerTilbakemelding(Tilbakemelding tilbakemelding) {
 		int brukernavn = tilbakemelding.getStudent().getBrukernavn();
 		for (Tilbakemelding tm : tilbakemeldinger) {
@@ -72,5 +78,9 @@ public class Forelesning {
 				return t.getTilbakemelding();
 		}
 		return 0;
+	}
+
+	public boolean giVurdering(int tilbakemelding, Person student) {
+		return tilbakemeldinger.add(new Tilbakemelding(tilbakemelding, student));
 	}
 }

@@ -1,5 +1,6 @@
 package no.hvl.dat109;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,12 @@ public class Emne {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int emnenr;
-	
+
 	private String emnekode;
 	private String semester;
 	private String navn;
 	private List<Person> lektorer;
-	
+
 	@ManyToOne
 	List<Forelesning> forelesninger;
 
@@ -33,7 +34,7 @@ public class Emne {
 		this.lektorer = lektorer;
 		this.forelesninger = forelesninger;
 	}
-	
+
 	public double getResultat() {
 		double sum = 0;
 		for (Forelesning f : forelesninger) {
@@ -41,7 +42,7 @@ public class Emne {
 		}
 		return sum;
 	}
-	
+
 	public double getResultat(int forelesningsnr) {
 		for (Forelesning f : forelesninger) {
 			if (forelesningsnr == f.getForelesningsnr()) {
@@ -50,30 +51,33 @@ public class Emne {
 		}
 		return 0;
 	}
-	
+
 	public int getEmnenr() {
 		return emnenr;
 	}
-	
+
 	public String getNavn() {
 		return navn;
 	}
-	
+
 	public String getSemester() {
 		return semester;
 	}
-	
+
 	public List<Person> getLektorer() {
 		return lektorer;
 	}
-	
-	public void giVurdering(int brukernavn, int tilbakemelding, int forelesningsID) {
-		
-		
+
+	public boolean giVurdering(int forelesningsnr, int tilbakemelding, Person student) {
+		for (Forelesning f : forelesninger) {
+			if (forelesningsnr == f.getForelesningsnr()) {
+				return f.giVurdering(tilbakemelding, student);
+			}
+		}
+		return false;
 	}
-	
+
 	public String getEmnekode() {
 		return emnekode;
 	}
-	
 }

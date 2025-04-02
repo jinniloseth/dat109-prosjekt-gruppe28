@@ -9,10 +9,10 @@ public class Person {
 
 	private int brukernavn;
 	private boolean erLektor;
-	
-	@ManyToMany() //må fikses
+
+	@ManyToMany() // må fikses
 	private List<Emne> emner;
-	
+
 	public Person(int brukernavn, boolean erLektor, List<Emne> emner) {
 		this.brukernavn = brukernavn;
 		this.erLektor = erLektor;
@@ -26,7 +26,7 @@ public class Person {
 	public boolean erLektor() {
 		return erLektor;
 	}
-	
+
 	public List<Emne> getEmner() {
 		return emner;
 	}
@@ -34,17 +34,9 @@ public class Person {
 	public void setEmner(List<Emne> emner) {
 		this.emner = emner;
 	}
-	
-	@Override
-	public String toString() {
-		String s = "Student Id: " + brukernavn;
-		
-		for(Emne e : emner) {
-			s += e.getEmnekode() + " \n";
-		}
-		
-		return s;
+
+	public boolean harEmne(Emne emne) {
+		return emner.contains(emne);
 	}
 
-	
 }
