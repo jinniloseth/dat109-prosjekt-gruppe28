@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import no.hvl.dat109.repo.EmneRepo;
@@ -13,16 +15,22 @@ import no.hvl.dat109.repo.EmneRepo;
 public class Emne {
 
 	@Id
-	private String emnekode;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int emnenr;
 	
+	private String emnekode;
+	private String semester;
 	private String navn;
+	private List<Person> lektorer;
 	
 	@ManyToOne
 	List<Forelesning> forelesninger;
 
-	public Emne(String emnekode, String navn, List<Forelesning> forelesninger) {
+	public Emne(String emnekode, String navn, String semester, List<Person> lektorer, List<Forelesning> forelesninger) {
 		this.emnekode = emnekode;
 		this.navn = navn;
+		this.semester = semester;
+		this.lektorer = lektorer;
 		this.forelesninger = forelesninger;
 	}
 	
@@ -43,11 +51,23 @@ public class Emne {
 		return 0;
 	}
 	
+	public int getEmnenr() {
+		return emnenr;
+	}
+	
 	public String getNavn() {
 		return navn;
 	}
 	
-	public void giVurdering(int studentID, int tilbakemelding, int forelesningsID) {
+	public String getSemester() {
+		return semester;
+	}
+	
+	public List<Person> getLektorer() {
+		return lektorer;
+	}
+	
+	public void giVurdering(int brukernavn, int tilbakemelding, int forelesningsID) {
 		
 		
 	}

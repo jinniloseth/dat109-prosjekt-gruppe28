@@ -12,10 +12,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.persistence.OneToMany;
 import no.hvl.dat109.Emne;
 import no.hvl.dat109.Forelesning;
-import no.hvl.dat109.Student;
+import no.hvl.dat109.Person;
 import no.hvl.dat109.Tilbakemelding;
 import no.hvl.dat109.repo.EmneRepo;
-import no.hvl.dat109.repo.StudentRepo;
+import no.hvl.dat109.repo.PersonRepo;
 
 public class EmneController {
 	
@@ -23,7 +23,7 @@ public class EmneController {
 	EmneRepo emneRepo;
 	
 	@Autowired
-	StudentRepo studentRepo;
+	PersonRepo studentRepo;
 	
 	public EmneController() {
 	}
@@ -37,7 +37,7 @@ public class EmneController {
 	public String loggInn(Model model, String type, String brukernavn) {
 		int bn = Integer.parseInt(brukernavn);
 		if (type.toLowerCase().contains("student")) {
-			Student s = studentRepo.finnStudent(bn);
+			Person s = studentRepo.finnPerson(bn);
 			if (s != null) {
 				model.addAttribute(s);
 				return "redirect:oversikt"; // skal vise oversikt over fag, så skal man kunne velge fag
@@ -49,13 +49,25 @@ public class EmneController {
 	@GetMapping("/oversikt")
 	public String visFag(Model model) {
 		String s = (String) model.getAttribute("studentID");
-		Student student = studentRepo.findById(Integer.parseInt(s)).orElse(null);
+		Person student = studentRepo.findById(Integer.parseInt(s)).orElse(null);
 		if (student != null) {
 			model.addAttribute("emner", student.getEmner());
 		}
 		
 		return "oversikt";
 	}
+	
+	public Emne finnEmne(String emnekode, String semester) {
+		List<Emne> emner = emneRepo.findAll();
+		for (Emne e : emner) {
+			if(emnekode.equals(e.getEmnekode()) && semester.equals(e.getSemester())) {
+				return e;
+			}
+		}
+		return null;
+	}
+	
+	public boolean opprettForelesning(String emnekode, String semester, )
 
 //	@GetMapping("/resultat")
 //	public String getResultat(Model model, @RequestParam String emnekode, @RequestParam int forelesningsnr) {

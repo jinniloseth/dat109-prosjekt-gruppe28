@@ -18,18 +18,13 @@ public class Forelesning {
 	private int forelesningsnr;
 
 	// en forelesning må ha en lektor?
-
 	private LocalDate dato;
-	private LocalTime tidFra;
-	private LocalTime tidTil;
 
 	@OneToMany(mappedBy = "forelesning")
 	private List<Tilbakemelding> tilbakemeldinger;
 
-	public Forelesning(LocalDate dato, LocalTime tidFra, LocalTime tidTil) {
+	public Forelesning(LocalDate dato) {
 		this.dato = dato;
-		this.tidFra = tidFra;
-		this.tidTil = tidTil;
 	}
 
 	public int getForelesningsnr() {
@@ -38,14 +33,6 @@ public class Forelesning {
 
 	public LocalDate getDato() {
 		return dato;
-	}
-
-	public LocalTime getTidFra() {
-		return tidFra;
-	}
-
-	public LocalTime getTidTil() {
-		return tidTil;
 	}
 
 	public boolean registrerTilbakemelding(Tilbakemelding tilbakemelding) {

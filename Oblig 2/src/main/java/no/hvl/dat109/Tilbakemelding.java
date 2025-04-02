@@ -17,9 +17,9 @@ public class Tilbakemelding {
 	private int tilbakemelding;
 	
 	@ManyToOne
-	private Student student;
+	private Person student;
 	
-	public Tilbakemelding(int t, Student student) {
+	public Tilbakemelding(int t, Person student) {
 		tilbakemelding = t;
 		this.student = student;
 	}
@@ -32,7 +32,7 @@ public class Tilbakemelding {
 		return tilbakemelding;
 	}
 
-	public Student getStudent() {
+	public Person getStudent() {
 		return student;
 	}
 

@@ -23,7 +23,8 @@
 			</tr>
 		</c:forEach>
 
-		</table>
+		Takk for din tilbakemelding!
+		
 	</form>
 </body>
 </html>

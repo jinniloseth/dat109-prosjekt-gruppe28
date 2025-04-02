@@ -5,7 +5,7 @@ import java.util.List;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
-public class Student {
+public class Person {
 
 	private int brukernavn;
 	private boolean erLektor;
@@ -13,7 +13,7 @@ public class Student {
 	@ManyToMany() //må fikses
 	private List<Emne> emner;
 	
-	public Student(int brukernavn, boolean erLektor, List<Emne> emner) {
+	public Person(int brukernavn, boolean erLektor, List<Emne> emner) {
 		this.brukernavn = brukernavn;
 		this.erLektor = erLektor;
 		this.emner = emner;
