@@ -1,6 +1,5 @@
 package no.hvl.dat109.kontrollere;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import jakarta.persistence.OneToMany;
 import no.hvl.dat109.Emne;
-import no.hvl.dat109.Forelesning;
 import no.hvl.dat109.Person;
-import no.hvl.dat109.Tilbakemelding;
 import no.hvl.dat109.repo.EmneRepo;
 import no.hvl.dat109.repo.PersonRepo;
 
@@ -30,18 +26,27 @@ public class EmneController {
 	}
 
 	@GetMapping("/innlogging")
-	public String visInnlogging() {
+	public String visInnlogging(Model model, @RequestParam(required = false) Integer emnenr, Integer forelesningnr) {
+		model.addAttribute("emnenr", emnenr);
+		model.addAttribute("forelesningsnr", forelesningnr);
 		return "innlogging";
 	}
 
 	@PostMapping("/innlogging")
-	public String loggInn(Model model, String type, String brukernavn) {
+	public String loggInn(RedirectAttributes ra, String brukernavn, @RequestParam(required = false) Integer emnenr, @RequestParam(required = false) Integer forelesningnr) {
 		int bn = Integer.parseInt(brukernavn);
-		if (type.toLowerCase().contains("student")) {
-			Person s = personRepo.findById(bn).orElse(null);
-			if (s != null) {
-				model.addAttribute(s);
+		Person person = personRepo.findById(bn).orElse(null);
+		
+		Emne emne = (emnenr != null) ? emneRepo.findById(emnenr).orElse(null) : null;
+		if (person != null) {
+			if (person.erLektor()) {
+				ra.addFlashAttribute("lektor", person);
 				return "redirect:oversikt"; // skal vise oversikt over fag, så skal man kunne velge fag
+			} else if (person.harEmne(emne) && forelesningnr != null) {
+				ra.addFlashAttribute("student", person);
+				ra.addFlashAttribute("emne", emne);
+				ra.addFlashAttribute("forelesningsnr", forelesningnr);
+				return "redirect:vurderingskjema";
 			}
 		}
 		return "innlogging";
