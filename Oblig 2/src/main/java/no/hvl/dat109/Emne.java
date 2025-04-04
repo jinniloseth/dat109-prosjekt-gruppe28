@@ -43,11 +43,9 @@ public class Emne {
 		return sum;
 	}
 
-	public double getResultat(int forelesningsnr) {
-		for (Forelesning f : forelesninger) {
-			if (forelesningsnr == f.getForelesningsnr()) {
-				return f.getResultat();
-			}
+	public double getResultat(int forelesningnr) {
+		if (forelesningnr < forelesninger.size()) {
+			return forelesninger.get(forelesningnr - 1).getResultat();
 		}
 		return 0;
 	}
@@ -68,16 +66,18 @@ public class Emne {
 		return lektorer;
 	}
 
-	public boolean giVurdering(int forelesningsnr, int tilbakemelding, Person student) {
-		for (Forelesning f : forelesninger) {
-			if (forelesningsnr == f.getForelesningsnr()) {
-				return f.giVurdering(tilbakemelding, student);
-			}
+	public boolean giVurdering(int forelesningnr, int tilbakemelding, Person student) {
+		if (forelesningnr < forelesninger.size()) {
+			return forelesninger.get(forelesningnr - 1).giVurdering(tilbakemelding, student);
 		}
 		return false;
 	}
 
 	public String getEmnekode() {
 		return emnekode;
+	}
+
+	public Forelesning finnForelesning(int forelesningnr) {
+		return forelesninger.get(forelesningnr - 1);
 	}
 }

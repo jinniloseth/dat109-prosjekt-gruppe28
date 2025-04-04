@@ -5,11 +5,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import no.hvl.dat109.Emne;
+import no.hvl.dat109.Forelesning;
 import no.hvl.dat109.Person;
 import no.hvl.dat109.repo.EmneRepo;
 import no.hvl.dat109.repo.PersonRepo;
@@ -38,6 +40,7 @@ public class EmneController {
 		Person person = personRepo.findById(bn).orElse(null);
 		
 		Emne emne = (emnenr != null) ? emneRepo.findById(emnenr).orElse(null) : null;
+		Forelesning forelesning = (forelesningnr != null) ? emne.finnForelesning(forelesningnr) : null;
 		if (person != null) {
 			if (person.erLektor()) {
 				ra.addFlashAttribute("lektor", person);
@@ -45,13 +48,28 @@ public class EmneController {
 			} else if (person.harEmne(emne) && forelesningnr != null) {
 				ra.addFlashAttribute("student", person);
 				ra.addFlashAttribute("emne", emne);
-				ra.addFlashAttribute("forelesningsnr", forelesningnr);
+				ra.addFlashAttribute("forelesning", forelesning);
 				return "redirect:vurderingskjema";
 			}
 		}
 		return "innlogging";
 	}
+	
+	@GetMapping("/vurderingskjema")
+	public String hentVurdering(Model model, @ModelAttribute("student") Person student, @ModelAttribute("emne") Emne emne, @ModelAttribute("forelesning") Forelesning forelesning) {
+		model.addAttribute("student", student);
+		model.addAttribute("emne", emne);
+		model.addAttribute("forelesning", forelesning);
+		return "vurderingskjema";
+	}
 
+	@PostMapping("/vurderingskjema")
+	public String giVurdering(Model model, Person student, Emne emne, Forelesning forelesning) {
+		
+		
+		return "redirect:innlogging"; // Hvor skal man gå etter gitt vurdering?
+	}
+	
 	public boolean giVurdering(String emnekode, String semester, int forelesningsnr, int tilbakemelding,
 			int brukernavn) {
 		Emne emne = finnEmne(emnekode, semester);
@@ -82,6 +100,17 @@ public class EmneController {
 		}
 		return null;
 	}
+	
+	@GetMapping("/forelesninger")
+    public String visForelesninger(@RequestParam String emnekode, @RequestParam String semester, Model model) {
+        Emne e = .finnEmne(emnekode, semester);
+        if (e != null) {
+            model.addAttribute("emne", e);
+            model.addAttribute("forelesninger", e.getForelesninger());
+            return "forelesningsoversikt";
+        }
+        return "emneoversikt";
+    }
 
 //	@GetMapping("/resultat")
 //	public String getResultat(Model model, @RequestParam String emnekode, @RequestParam int forelesningsnr) {

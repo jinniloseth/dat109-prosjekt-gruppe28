@@ -1,26 +1,19 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page contentType="text/html;charset=UTF-8"%>
-<!DOCTYPE html>
-<html lang="no">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Oversikt</title>
-    <link rel="stylesheet" href="simple.css">
+    <title>Forelesningsoversikt</title>
 </head>
 <body>
-    <h2>Fagene dine:</h2>
-    <table>
-        <tr>
-            <th>Emnekode</th>
-			<th>Forelesningsnr</th>
-        </tr>	
-        <c:forEach var="e" items="${emner}">
-            <tr>
-                <td onclick="window.location.href="${pageContext.request.contextPath}/';" style="cursor: pointer;">${e.emnekode}</td>
-                <td>${e.navn}</td>
-            </tr>
-        </c:forEach>
-    </table>
+    <h2>Forelesninger i ${emne.navn} (${emne.emnekode})</h2>
+    <c:forEach var="f" items="${forelesninger}">
+        <div>
+            <strong>${f.tittel}</strong><br/>
+            Dato: ${f.dato}<br/>
+            Forelesningsnr: ${f.forelesningsnr}
+        </div>
+        <hr/>
+    </c:forEach>
+    <a href="oversikt?brukernavn=${emne.lektorer[0].brukernavn}">Tilbake</a>
 </body>
 </html>
-<!--Ble ikke ferdig her-->

@@ -13,10 +13,6 @@ import jakarta.persistence.OneToMany;
 @Entity
 public class Forelesning {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int forelesningsnr;
-
 	// en forelesning må ha en lektor?
 	private LocalDate dato;
 	private String tittel;
@@ -29,18 +25,14 @@ public class Forelesning {
 		this.tittel = tittel;
 	}
 
-	public int getForelesningsnr() {
-		return forelesningsnr;
-	}
-
 	public LocalDate getDato() {
 		return dato;
 	}
-	
+
 	public String getTittel() {
 		return tittel;
 	}
-	
+
 	public boolean registrerTilbakemelding(Tilbakemelding tilbakemelding) {
 		int brukernavn = tilbakemelding.getStudent().getBrukernavn();
 		for (Tilbakemelding tm : tilbakemeldinger) {
@@ -51,17 +43,6 @@ public class Forelesning {
 
 		tilbakemeldinger.add(tilbakemelding);
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		String s = "Forelesningsnr: " + forelesningsnr + "\n" + "Lektor: "; // må fikses
-
-		for (Tilbakemelding t : tilbakemeldinger) {
-			s += t.toString();
-		}
-
-		return s;
 	}
 
 	public double getResultat() {

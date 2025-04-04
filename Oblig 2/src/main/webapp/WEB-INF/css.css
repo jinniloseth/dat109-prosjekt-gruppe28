@@ -1,29 +1,43 @@
-table {
-    width: 100%;
-    max-width: 600px;
-    margin: 20px auto;
-    border-collapse: collapse;
-    text-align: center;
+/* Enkel modul-styling til emneoversikt */
+.modul-container {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
 }
-
-th {
-    padding: 10px;
-    border-radius: 10px;
-    transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+.modul {
+    width: 250px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    background-color: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
 }
-
-th:hover {
-    background-color: #f0f0f0;
-    transform: scale(1.1);
+.modul-header {
+    height: 100px;
+    background-color: #ccc;
 }
-
-img {
-    width: 80px;
-    height: auto;
-    cursor: pointer;
-    transition: transform 0.2s ease-in-out;
+.modul-innhold {
+    padding: 1rem;
 }
-
-img:hover {
-    transform: scale(1.2);
+.fagnavn {
+    font-weight: bold;
+    color: #d32f2f;
+    margin-bottom: 0.3rem;
+}
+.kode, .semester {
+    color: #333;
+    margin-bottom: 0.3rem;
+}
+.ikoner {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+}
+.ikon {
+    width: 24px;
+    height: 24px;
+    background-color: #999;
+    border-radius: 50%;
 }
