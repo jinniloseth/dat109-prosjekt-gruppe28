@@ -8,17 +8,17 @@ import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Tilbakemelding {
-	
+
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int tilbakemeldingID;
-	
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int tilbakemeldingID;
+
 	@ManyToOne
 	private int tilbakemelding;
-	
+
 	@ManyToOne
 	private Person student;
-	
+
 	public Tilbakemelding(int t, Person student) {
 		tilbakemelding = t;
 		this.student = student;
@@ -27,7 +27,7 @@ public class Tilbakemelding {
 	public int getTilbakemeldingID() {
 		return tilbakemeldingID;
 	}
-	
+
 	public int getTilbakemelding() {
 		return tilbakemelding;
 	}
@@ -35,13 +35,4 @@ public class Tilbakemelding {
 	public Person getStudent() {
 		return student;
 	}
-
-	@Override
-	public String toString() {
-		return "Tilbakemelding: " + tilbakemelding + "\n" +
-			   "Student " + student.getBrukernavn() + "\n";
-	}
-	
-	
-	
 }

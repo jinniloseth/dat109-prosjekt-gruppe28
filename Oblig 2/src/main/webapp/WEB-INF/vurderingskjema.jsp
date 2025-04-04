@@ -18,11 +18,14 @@
     <form action="/vurderingskjema" method="post">
         <table>
             <tr>
-                <td><img src="bilder/1.png" alt="Dårlig forelesning"></td>
-                <td><img src="bilder/2.png" alt="Middels dårlig forelesning"></td>
-                <td><img src="bilder/3.png" alt="Mid forelesning no cap"></td>
-                <td><img src="bilder/4.png" alt="Middels bra forelesning"></td>
-                <td><img src="bilder/5.png" alt="Veldig bra forelesning"></td>
+				<c:forEach var="i" begin="1" end="5">
+				    <td>
+				        <label>
+				            <input type="radio" name="vurdering" value="${i}" style="display:none;" onchange="this.form.submit()">
+				        	<img src="bilder/${i}.png" alt="Vurdering ${i}" style="cursor:pointer;">
+				    	</label>
+					</td>
+				</c:forEach>
             </tr>
         </table>
     </form>

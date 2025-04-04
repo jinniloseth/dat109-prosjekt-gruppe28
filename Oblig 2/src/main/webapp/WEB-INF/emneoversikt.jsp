@@ -9,7 +9,7 @@
     <h1>Dine emner</h1>
     <div class="modul-container">
         <c:forEach var="emne" items="${emner}">
-            <a href="forelesninger?emnekode=${emne.emnekode}&semester=${emne.semester}" style="text-decoration: none;">
+            <a href="forelesningsoversikt?emne=${emne}" style="text-decoration: none;">
                 <div class="modul">
                     <div class="modul-header"></div>
                     <div class="modul-innhold">

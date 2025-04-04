@@ -80,4 +80,8 @@ public class Emne {
 	public Forelesning finnForelesning(int forelesningnr) {
 		return forelesninger.get(forelesningnr - 1);
 	}
+
+	public int antallForelesninger() {
+		return forelesninger.size();
+	}
 }

@@ -35,156 +35,73 @@ public class EmneController {
 	}
 
 	@PostMapping("/innlogging")
-	public String loggInn(RedirectAttributes ra, String brukernavn, @RequestParam(required = false) Integer emnenr, @RequestParam(required = false) Integer forelesningnr) {
+	public String loggInn(RedirectAttributes ra, String brukernavn, @RequestParam(required = false) Integer emnenr,
+			@RequestParam(required = false) Integer forelesningnr) {
 		int bn = Integer.parseInt(brukernavn);
 		Person person = personRepo.findById(bn).orElse(null);
-		
+
 		Emne emne = (emnenr != null) ? emneRepo.findById(emnenr).orElse(null) : null;
-		Forelesning forelesning = (forelesningnr != null) ? emne.finnForelesning(forelesningnr) : null;
 		if (person != null) {
 			if (person.erLektor()) {
 				ra.addFlashAttribute("lektor", person);
 				return "redirect:oversikt"; // skal vise oversikt over fag, så skal man kunne velge fag
-			} else if (person.harEmne(emne) && forelesningnr != null) {
+			} else {
 				ra.addFlashAttribute("student", person);
 				ra.addFlashAttribute("emne", emne);
-				ra.addFlashAttribute("forelesning", forelesning);
+				ra.addFlashAttribute("forelesningnr", forelesningnr);
 				return "redirect:vurderingskjema";
 			}
 		}
 		return "innlogging";
 	}
-	
+
 	@GetMapping("/vurderingskjema")
-	public String hentVurdering(Model model, @ModelAttribute("student") Person student, @ModelAttribute("emne") Emne emne, @ModelAttribute("forelesning") Forelesning forelesning) {
+	public String hentVurdering(Model model, @ModelAttribute Person student, @ModelAttribute Emne emne,
+			@ModelAttribute Integer forelesningnr) {
 		model.addAttribute("student", student);
 		model.addAttribute("emne", emne);
-		model.addAttribute("forelesning", forelesning);
+		model.addAttribute("forelesningnr", forelesningnr);
 		return "vurderingskjema";
 	}
 
 	@PostMapping("/vurderingskjema")
-	public String giVurdering(Model model, Person student, Emne emne, Forelesning forelesning) {
-		
-		
-		return "redirect:innlogging"; // Hvor skal man gå etter gitt vurdering?
+	public String giVurdering(Model model, Person student, Emne emne, Integer forelesningnr, String vurdering) {
+		if (student != null && emne != null && forelesningnr != null && !student.erLektor() && student.harEmne(emne)
+				&& 0 < forelesningnr && forelesningnr <= emne.antallForelesninger()) {
+			int v = Integer.parseInt(vurdering);
+			emne.giVurdering(forelesningnr, v, student);
+			return "redirect:innlogging"; // Implementere godkjenning
+		}
+		return "redirect:innlogging"; // Implementere feilmelding
+	}
+
+	@GetMapping("/emneoversikt")
+	public String visEmner(Model model, @ModelAttribute Person lektor) {
+		if (lektor != null && lektor.erLektor()) {
+			model.addAttribute("lektor", lektor);
+			model.addAttribute("emner", lektor.getEmner());
+			return "emneoversikt";
+		}
+		return "redirect:innlogging";
 	}
 	
-	public boolean giVurdering(String emnekode, String semester, int forelesningsnr, int tilbakemelding,
-			int brukernavn) {
-		Emne emne = finnEmne(emnekode, semester);
-		Person student = personRepo.findById(brukernavn).orElse(null);
-		if (emne != null && student != null && student.harEmne(emne) && !student.erLektor()) {
-			return emne.giVurdering(forelesningsnr, tilbakemelding, student);
+	@GetMapping("/forelesningsoversikt")
+	public String visForelesninger(Model model, Emne emne) {
+		if (emne != null) {
+			model.addAttribute("emne", emne);
+			model.addAttribute("resultat", emne.getResultat());
+			return "forelesningsoversikt";
 		}
-		return false;
-	}
-
-	@GetMapping("/oversikt")
-	public String visEmner(Model model) {
-		String s = (String) model.getAttribute("brukernavn");
-		Person student = personRepo.findById(Integer.parseInt(s)).orElse(null);
-		if (student != null) {
-			model.addAttribute("emner", student.getEmner());
-		}
-
-		return "oversikt";
-	}
-
-	private Emne finnEmne(String emnekode, String semester) {
-		List<Emne> emner = emneRepo.findAll();
-		for (Emne e : emner) {
-			if (emnekode.equals(e.getEmnekode()) && semester.equals(e.getSemester())) {
-				return e;
-			}
-		}
-		return null;
+		return "emneoversikt";
 	}
 	
-	@GetMapping("/forelesninger")
-    public String visForelesninger(@RequestParam String emnekode, @RequestParam String semester, Model model) {
-        Emne e = .finnEmne(emnekode, semester);
-        if (e != null) {
-            model.addAttribute("emne", e);
-            model.addAttribute("forelesninger", e.getForelesninger());
-            return "forelesningsoversikt";
-        }
-        return "emneoversikt";
-    }
-
-//	@GetMapping("/resultat")
-//	public String getResultat(Model model, @RequestParam String emnekode, @RequestParam int forelesningsnr) {
-//		model.addAttribute("emnekode", emnekode);
-//		model.addAttribute("forelesningsnr", forelesningsnr);
-//
-//		Emne emne = emneRepo.findByEmnekode(emnekode);
-//		
-//		for (Forelesning f : emne.ge)
-//
-//		if (f != null) {
-//			model.addAttribute("forelesning", f);
-//		}
-//
-//		model.addAllAttributes(resultat);
-//
-//		return "ressultat";
-//	}
-
-//	public double getResultat(String emnekode, int forelesningsnr) {
-//		return finnEmne(emnekode).getResultat(int forelesningsnr);
-//
-//		double resultat = null;
-//		
-//		Forelesning fo = forelesningRepository.findByEmnekodeAndForelesningsnr(emnekode, forelesningsnr);
-//		
-//		for(Forelesning f : forelesninger) {
-//			if(f.getEmnekode().equals(emnekode) && f.getForelesningsnr() == forelesningsnr) {
-//				fo = f;
+//	private Emne finnEmne(String emnekode, String semester) {
+//		List<Emne> emner = emneRepo.findAll();
+//		for (Emne e : emner) {
+//			if (emnekode.equals(e.getEmnekode()) && semester.equals(e.getSemester())) {
+//				return e;
 //			}
 //		}
-//		
-//		List<Tilbakemelding> tilbakemeldinger = fo.getTilbakemelding();
-//		
-//		for(Tilbakemelding t : tilbakemeldinger) {
-//			resultat += t.getTilbakemelding();
-//		}
-//		
-//		
-//		return resultat;
+//		return null;
 //	}
-
-//	public void giVurdering(int studentId, String emnekode, int forelesningsnr, int tilbakemelding){
-//		Forelesning f = forelesninger.stream()
-//									 .filter(fo -> fo.getEmnekode().equals(emnekode))
-//									 .filter(a -> a.getForelesningsnr() == forelesningsnr)
-//									 .findFirst()
-//									 .orElse(null);
-//		
-//		if(f != null) {
-//			Tilbakemelding t = new Tilbakemelding(tilbakemelding, studentId);
-//			f.registrerTilbakemelding(t);
-//		}
-//	}
-
-//	public List<Tilbakemelding> getTilbakemeldinger(String emnekode){
-//		
-//	}
-
-//	@GetMapping("/vurderingskjema")
-//	public String vurderingsSkjema(Model model, @RequestParam String emnekode, @RequestParam int forelesningsnr) {
-//		model.addAttribute("emnekode", emnekode);
-//		model.addAttribute("forelesningsnr", forelesningsnr);
-//		return "vurderingskjema";
-//	}
-//	
-//	@PostMapping("/vurderingskjema")
-//	public String sendVurderingSkjema(Model model, RedirectAttributes ra){
-//		
-//		
-//		emneRepo.save(forelensing, objekt);
-//		
-//		
-//		return "vurderingskjema";
-//	}
-
 }
