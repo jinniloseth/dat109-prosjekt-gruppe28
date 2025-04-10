@@ -5,15 +5,15 @@
     <title>Forelesningsoversikt</title>
 </head>
 <body>
-    <h2>Forelesninger i ${emne.emnekode} ${emne.semester}</h2>
+    <h2>Forelesninger i ${emne.emnekode} ${emne.semester} Resultat: ${resultat}</h2>
     <c:forEach var="f" items="${emne.forelesninger}">
         <div>
             <strong>${f.tittel}</strong><br/>
             Dato: ${f.dato}<br/>
             Forelesningsnr: ${f.forelesningsnr}
-			Resultat: ${}
+			Resultat: ${f.resultat}
         </div>
     </c:forEach>
-    <a href="oversikt?brukernavn=${emne.brukernavn}">Tilbake</a>
+    <a href="emneoversikt">Tilbake</a>
 </body>
 </html>

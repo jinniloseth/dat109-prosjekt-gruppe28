@@ -16,11 +16,13 @@
                         <div class="fagnavn">${emne.navn}</div>
                         <div class="kode">${emne.emnekode}</div>
                         <div class="semester">${emne.semester}</div>
+						<div class="resultat">${emne.resultat}</div>
                         <div class="ikoner">
                             <div class="ikon"></div>
                             <div class="ikon"></div>
                             <div class="ikon"></div>
                         </div>
+						
                     </div>
                 </div>
             </a>

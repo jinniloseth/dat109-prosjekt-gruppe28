@@ -23,6 +23,7 @@ public class Emne {
 	private String semester;
 	private String navn;
 	private List<Person> lektorer;
+	private double resultat;
 
 	@ManyToOne
 	List<Forelesning> forelesninger;
@@ -33,6 +34,7 @@ public class Emne {
 		this.semester = semester;
 		this.lektorer = lektorer;
 		this.forelesninger = forelesninger;
+		this.resultat = 0;
 	}
 
 	public double getResultat() {
@@ -40,7 +42,8 @@ public class Emne {
 		for (Forelesning f : forelesninger) {
 			sum += f.getResultat();
 		}
-		return sum;
+		resultat = sum / (double) forelesninger.size();
+		return resultat;
 	}
 
 	public double getResultat(int forelesningnr) {

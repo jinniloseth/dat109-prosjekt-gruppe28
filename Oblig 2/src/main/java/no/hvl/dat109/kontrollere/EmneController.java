@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.servlet.http.HttpSession;
 import no.hvl.dat109.Emne;
 import no.hvl.dat109.Forelesning;
 import no.hvl.dat109.Person;
@@ -35,16 +36,16 @@ public class EmneController {
 	}
 
 	@PostMapping("/innlogging")
-	public String loggInn(RedirectAttributes ra, String brukernavn, @RequestParam(required = false) Integer emnenr,
-			@RequestParam(required = false) Integer forelesningnr) {
+	public String loggInn(RedirectAttributes ra, HttpSession hs, String brukernavn,
+			@RequestParam(required = false) Integer emnenr, @RequestParam(required = false) Integer forelesningnr) {
 		int bn = Integer.parseInt(brukernavn);
 		Person person = personRepo.findById(bn).orElse(null);
 
 		Emne emne = (emnenr != null) ? emneRepo.findById(emnenr).orElse(null) : null;
 		if (person != null) {
 			if (person.erLektor()) {
-				ra.addFlashAttribute("lektor", person);
-				return "redirect:oversikt"; // skal vise oversikt over fag, så skal man kunne velge fag
+				hs.setAttribute("lektor", person);
+				return "redirect:oversikt";
 			} else {
 				ra.addFlashAttribute("student", person);
 				ra.addFlashAttribute("emne", emne);
@@ -76,25 +77,29 @@ public class EmneController {
 	}
 
 	@GetMapping("/emneoversikt")
-	public String visEmner(Model model, @ModelAttribute Person lektor) {
+	public String visEmner(Model model, HttpSession hs) {
+		Person lektor = (Person) hs.getAttribute("lektor");
 		if (lektor != null && lektor.erLektor()) {
 			model.addAttribute("lektor", lektor);
-			model.addAttribute("emner", lektor.getEmner());
+
+			List<Emne> emner = lektor.getEmner();
+			model.addAttribute("emner", emner);
 			return "emneoversikt";
 		}
 		return "redirect:innlogging";
 	}
-	
+
 	@GetMapping("/forelesningsoversikt")
-	public String visForelesninger(Model model, Emne emne) {
-		if (emne != null) {
+	public String visForelesninger(Model model, HttpSession hs, Emne emne) {
+		Person lektor = (Person) hs.getAttribute("lektor");
+		if (emne != null && lektor != null && lektor.erLektor() && lektor.harEmne(emne)) {
 			model.addAttribute("emne", emne);
 			model.addAttribute("resultat", emne.getResultat());
 			return "forelesningsoversikt";
 		}
 		return "emneoversikt";
 	}
-	
+
 //	private Emne finnEmne(String emnekode, String semester) {
 //		List<Emne> emner = emneRepo.findAll();
 //		for (Emne e : emner) {

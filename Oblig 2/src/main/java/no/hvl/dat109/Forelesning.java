@@ -19,10 +19,12 @@ public class Forelesning {
 
 	@OneToMany(mappedBy = "forelesning")
 	private List<Tilbakemelding> tilbakemeldinger;
+	private double resultat;
 
 	public Forelesning(LocalDate dato, String tittel) {
 		this.dato = dato;
 		this.tittel = tittel;
+		resultat = 0;
 	}
 
 	public LocalDate getDato() {
@@ -50,18 +52,11 @@ public class Forelesning {
 		for (Tilbakemelding t : tilbakemeldinger) {
 			sum += t.getTilbakemelding();
 		}
-		return sum / (double) tilbakemeldinger.size();
-	}
-
-	public double getResultat(int tilbakemeldingID) {
-		for (Tilbakemelding t : tilbakemeldinger) {
-			if (tilbakemeldingID == t.getTilbakemeldingID())
-				return t.getTilbakemelding();
-		}
-		return 0;
+		resultat = sum / (double) tilbakemeldinger.size();
+		return resultat;
 	}
 
 	public boolean giVurdering(int tilbakemelding, Person student) {
-		return tilbakemeldinger.add(new Tilbakemelding(tilbakemelding, student));
+		return  tilbakemeldinger.add(new Tilbakemelding(tilbakemelding, student));
 	}
 }
