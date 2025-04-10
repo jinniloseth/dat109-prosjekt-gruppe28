@@ -70,7 +70,7 @@ public class Emne {
 	}
 
 	public boolean giVurdering(int forelesningnr, int tilbakemelding, Person student) {
-		if (forelesningnr < forelesninger.size()) {
+		if (0 < forelesningnr && forelesningnr < forelesninger.size() && student != null && !student.erLektor() && student.harEmne(this)) {
 			return forelesninger.get(forelesningnr - 1).giVurdering(tilbakemelding, student);
 		}
 		return false;

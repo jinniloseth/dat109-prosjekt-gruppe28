@@ -68,7 +68,7 @@ public class EmneController {
 	@PostMapping("/vurderingskjema")
 	public String giVurdering(Model model, Person student, Emne emne, Integer forelesningnr, String vurdering) {
 		if (student != null && emne != null && forelesningnr != null && !student.erLektor() && student.harEmne(emne)
-				&& 0 < forelesningnr && forelesningnr <= emne.antallForelesninger()) {
+				&& 0 <= forelesningnr && forelesningnr < emne.antallForelesninger()) {
 			int v = Integer.parseInt(vurdering);
 			emne.giVurdering(forelesningnr, v, student);
 			return "redirect:innlogging"; // Implementere godkjenning
