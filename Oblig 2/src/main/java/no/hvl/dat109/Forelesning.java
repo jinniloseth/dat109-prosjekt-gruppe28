@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -30,32 +31,25 @@ public class Forelesning {
 	
 	//private Map<Integer, Integer> tilbakemeldinger;
 	@OneToMany(mappedBy = "forelesning", cascade = CascadeType.ALL)
-	private List<Tilbakemelding> tilbakemeldinger = new ArrayList<>();
+	private Map<Integer, Integer> tilbakemeldinger;
 	
 	private double resultat;
 
 	public Forelesning(String tittel, LocalDate dato) {
+		tilbakemeldinger = new HashMap<>();
 		this.dato = dato;
 		this.tittel = tittel;
 		resultat = 0;
 	}
 	
-    public Forelesning() {
-    }
-
 	public LocalDate getDato() {
 		return dato;
 	}
 
-	
 	public String getTittel() {
 		return tittel;
 	}
 	
-	public List<Tilbakemelding> getTilbakemeldinger() {
-		return tilbakemeldinger;
-	}
-
 	public double getResultat() {
 		double sum = 0;
 		for (double i : tilbakemeldinger.values()) {
