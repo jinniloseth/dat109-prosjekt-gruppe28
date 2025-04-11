@@ -20,6 +20,12 @@ public class Person {
 	@ManyToMany() // må fikses
 	private List<Emne> emner;
 
+	public Person(int brukernavn, boolean erLektor) {
+		this.brukernavn = brukernavn;
+		this.erLektor = erLektor;
+		this.emner = List.of();
+	}
+	
 	public Person(int brukernavn, boolean erLektor, List<Emne> emner) {
 		this.brukernavn = brukernavn;
 		this.erLektor = erLektor;
