@@ -31,8 +31,8 @@ public class Forelesning {
 	
 	//private Map<Integer, Integer> tilbakemeldinger;
 	@OneToMany(mappedBy = "forelesning", cascade = CascadeType.ALL)
-	private Map<Integer, Integer> tilbakemeldinger;
-	private HashMap<Integer, Integer> tilbakemeldinger = new HashMap<>();
+
+	private HashMap<Integer, Integer> tilbakemeldinger;
 	
 	private double resultat;
 
@@ -50,10 +50,11 @@ public class Forelesning {
 	public String getTittel() {
 		return tittel;
 	}
-	
+
 	public HashMap<Integer, Integer> getTilbakemeldinger() {
 		return tilbakemeldinger;
 	}
+
 	public double getResultat() {
 		double sum = 0;
 		for (double i : tilbakemeldinger.values()) {
