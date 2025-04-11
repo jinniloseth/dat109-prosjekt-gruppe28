@@ -1,41 +1,59 @@
 package no.hvl.dat109;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
 public class Forelesning {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int forelesningsnr;
+	
 	// en forelesning må ha en lektor?
 	private LocalDate dato;
 	private String tittel;
+	
+	@ManyToOne
+	private Emne emne;
 
-	@OneToMany(mappedBy = "forelesning")
-	private Map<Integer, Integer> tilbakemeldinger;
+	
+	//private Map<Integer, Integer> tilbakemeldinger;
+	@OneToMany(mappedBy = "forelesning", cascade = CascadeType.ALL)
+	private List<Tilbakemelding> tilbakemeldinger = new ArrayList<>();
+	
 	private double resultat;
 
 	public Forelesning(String tittel, LocalDate dato) {
 		this.dato = dato;
 		this.tittel = tittel;
-		tilbakemeldinger = new HashMap<>();
 		resultat = 0;
 	}
+	
+    public Forelesning() {
+    }
 
 	public LocalDate getDato() {
 		return dato;
 	}
 
+	
 	public String getTittel() {
 		return tittel;
+	}
+	
+	public List<Tilbakemelding> getTilbakemeldinger() {
+		return tilbakemeldinger;
 	}
 
 	public double getResultat() {

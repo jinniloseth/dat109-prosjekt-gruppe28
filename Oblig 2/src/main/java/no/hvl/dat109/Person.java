@@ -2,12 +2,19 @@ package no.hvl.dat109;
 
 import java.util.List;
 
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 
+@Entity
 public class Person {
-
+	
+	@Id
 	private int brukernavn;
+	
 	private boolean erLektor;
 
 	@ManyToMany() // må fikses
@@ -17,6 +24,9 @@ public class Person {
 		this.brukernavn = brukernavn;
 		this.erLektor = erLektor;
 		this.emner = emner;
+	}
+	public Person() {
+		
 	}
 
 	public int getBrukernavn() {

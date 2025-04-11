@@ -9,7 +9,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import no.hvl.dat109.repo.EmneRepo;
 
 @Entity
@@ -22,10 +24,13 @@ public class Emne {
 	private String emnekode;
 	private String semester;
 	private String navn;
+	
+	@ManyToMany
 	private List<Person> lektorer;
+	
 	private double resultat;
 
-	@ManyToOne
+	@OneToMany(mappedBy = "emne")
 	List<Forelesning> forelesninger;
 
 	public Emne(String emnekode, String navn, String semester, List<Person> lektorer, List<Forelesning> forelesninger) {
@@ -35,6 +40,9 @@ public class Emne {
 		this.lektorer = lektorer;
 		this.forelesninger = forelesninger;
 		this.resultat = 0;
+	}
+	public Emne() {
+		
 	}
 
 	public double getResultat() {
