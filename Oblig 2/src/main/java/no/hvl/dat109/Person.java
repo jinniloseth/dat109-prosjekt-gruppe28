@@ -25,8 +25,8 @@ public class Person {
 		this.erLektor = erLektor;
 		this.emner = emner;
 	}
-	public Person() {
-		
+	public Person(int brukernavn, boolean b) {
+		this.brukernavn = brukernavn;
 	}
 
 	public int getBrukernavn() {
