@@ -1,36 +1,35 @@
 package no.hvl.dat109.tester;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import no.hvl.dat109.Emne;
 import no.hvl.dat109.Forelesning;
 import no.hvl.dat109.Person;
-import no.hvl.dat109.Tilbakemelding;
 
 class ForelesningTest {
 
     private Forelesning forelesning;
     private Person student1;
     private Person student2;
-    private Tilbakemelding tilbakemelding1;
-    private Tilbakemelding tilbakemelding2;
+
 
     @BeforeEach
     void setUp() {
         // Setup sample data for the tests
-        forelesning = new Forelesning(LocalDate.of(2025, 4, 4), "Java Basics");
+        forelesning = new Forelesning("Java Basics", LocalDate.of(2025, 4, 4));
 
         // Create students
-        student1 = new Person(1, "student1", "Student One");
-        student2 = new Person(2, "student2", "Student Two");
+        student1 = new Person(1, false);
+        student2 = new Person(2, false);
 
-        // Create feedback objects
-        tilbakemelding1 = new Tilbakemelding(5, student1);
-        tilbakemelding2 = new Tilbakemelding(4, student2);
     }
 
     @Test
@@ -41,19 +40,11 @@ class ForelesningTest {
     }
 
     @Test
-    void testRegistrerTilbakemelding() {
-        // Test if feedback can be registered once per student
-        assertTrue(forelesning.registrerTilbakemelding(tilbakemelding1)); // First feedback from student1
-        assertFalse(forelesning.registrerTilbakemelding(tilbakemelding1)); // Second feedback from the same student should fail
-        assertTrue(forelesning.registrerTilbakemelding(tilbakemelding2)); // Feedback from a different student should succeed
-    }
-
-    @Test
     void testGetResultat() {
         // Test if the average of feedback is calculated correctly
-        forelesning.registrerTilbakemelding(tilbakemelding1);
-        forelesning.registrerTilbakemelding(tilbakemelding2);
-        double expectedAverage = (5 + 4) / 2.0;
+        forelesning.giVurdering(2, student1);
+        forelesning.giVurdering(3, student2);
+        double expectedAverage = (3 + 2) / 2.0;
         assertEquals(expectedAverage, forelesning.getResultat(), 0.01);
     }
 
