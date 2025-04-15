@@ -31,14 +31,13 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Denne er nødv. for jakarta.xml.bind.DatatypeConverter i
-		PassordService -->
+		<!-- Dependency for jakarta.xml.bind.DatatypeConverter in PassordService -->
 		<dependency>
 			<groupId>jakarta.xml.bind</groupId>
 			<artifactId>jakarta.xml.bind-api</artifactId>
 		</dependency>
 
-		<!-- Begge disse er nødv. for nye jakarta JSTL taglibs -->
+		<!-- Dependencies for Jakarta JSTL -->
 		<dependency>
 			<groupId>jakarta.servlet.jsp.jstl</groupId>
 			<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
@@ -48,20 +47,20 @@
 			<artifactId>jakarta.servlet.jsp.jstl</artifactId>
 		</dependency>
 
-		<!-- Denne er nødv. for JUnit -->
+		<!-- Spring Boot Test Starter (already included for unit/integration tests) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Denne er nødv. for input-validering med Bean Validation -->
+		<!-- Dependency for input validation with Bean Validation -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
-		<!-- Begge disse er nødv. for oppkobling til database -->
+		<!-- Dependencies for JPA and PostgreSQL connection -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -71,24 +70,37 @@
 			<artifactId>postgresql</artifactId>
 		</dependency>
 
-		<!-- Mockito (trengs ofte eksplisitt) -->
+		<!-- Mockito for mock testing -->
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- JUnit 5 (om ikke inkludert fra før) -->
+		<!-- JUnit 5 dependencies -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter</artifactId>
+			<artifactId>junit-jupiter-api</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
-		
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.7.0</version> <!-- or latest version -->
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Spring Security Test for security-related tests -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Optional: Spring Test for MockMvc testing -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
