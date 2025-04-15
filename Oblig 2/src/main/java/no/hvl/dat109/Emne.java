@@ -25,18 +25,15 @@ public class Emne {
 	private String semester;
 	private String navn;
 
-	private List<Person> lektorer;
-
 	private double resultat;
 
 	@OneToMany
 	List<Forelesning> forelesninger;
 
-	public Emne(String emnekode, String navn, String semester, List<Person> lektorer, List<Forelesning> forelesninger) {
+	public Emne(String emnekode, String navn, String semester, List<Forelesning> forelesninger) {
 		this.emnekode = emnekode;
 		this.navn = navn;
 		this.semester = semester;
-		this.lektorer = lektorer;
 		this.forelesninger = forelesninger;
 		this.resultat = 0;
 	}
@@ -69,10 +66,6 @@ public class Emne {
 
 	public String getSemester() {
 		return semester;
-	}
-
-	public List<Person> getLektorer() {
-		return lektorer;
 	}
 
 	public boolean giVurdering(int forelesningnr, int tilbakemelding, Person student) {
