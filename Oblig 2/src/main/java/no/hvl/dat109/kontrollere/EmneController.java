@@ -27,9 +27,6 @@ public class EmneController {
 	@Autowired
 	PersonRepo personRepo;
 
-	public EmneController() {
-	}
-
 	@GetMapping("/innlogging")
 	public String visInnlogging(Model model, @RequestParam(required = false) Integer emnenr, Integer forelesningnr) {
 		model.addAttribute("emnenr", emnenr);
@@ -38,12 +35,16 @@ public class EmneController {
 	}
 
 	@PostMapping("/innlogging")
-	public String loggInn(RedirectAttributes ra, HttpSession hs, String brukernavn,
+	public String loggInn(RedirectAttributes ra, HttpSession hs, @RequestParam("brukernavn") int brukernavn,
 			@RequestParam(required = false) Integer emnenr, @RequestParam(required = false) Integer forelesningnr) {
-		int bn = Integer.parseInt(brukernavn);
-		Person person = personRepo.findById(bn).orElse(null);
-
+		
+		Person person = personRepo.findById(brukernavn).orElse(null);
+		
 		Emne emne = (emnenr != null) ? emneRepo.findById(emnenr).orElse(null) : null;
+
+		System.out.println("Person:" + person);
+		System.out.println(brukernavn);
+		
 		if (person != null) {
 			if (person.erLektor()) {
 				hs.setAttribute("lektor", person);

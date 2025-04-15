@@ -22,7 +22,12 @@ public class Forelesning {
 
 	@OneToMany
 	private List<Tilbakemelding> tilbakemeldinger;
+	
 	private double resultat;
+	
+	public Forelesning() {
+		
+	}
 
 	public Forelesning(LocalDate dato, String tittel) {
 		this.dato = dato;

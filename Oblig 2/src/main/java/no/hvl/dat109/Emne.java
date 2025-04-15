@@ -29,6 +29,10 @@ public class Emne {
 
 	@OneToMany
 	List<Forelesning> forelesninger;
+	
+	public Emne() {
+		
+	}
 
 	public Emne(String emnekode, String navn, String semester, List<Forelesning> forelesninger) {
 		this.emnekode = emnekode;

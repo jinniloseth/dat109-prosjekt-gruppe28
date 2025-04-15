@@ -17,6 +17,10 @@ public class Tilbakemelding {
 
 	@ManyToOne
 	private Person student;
+	
+	public Tilbakemelding() {
+		
+	}
 
 	public Tilbakemelding(int t, Person student) {
 		tilbakemelding = t;

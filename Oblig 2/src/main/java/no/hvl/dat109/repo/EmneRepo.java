@@ -7,4 +7,5 @@ import no.hvl.dat109.Emne;
 
 @Repository
 public interface EmneRepo extends JpaRepository<Emne, Integer> {
+
 }
