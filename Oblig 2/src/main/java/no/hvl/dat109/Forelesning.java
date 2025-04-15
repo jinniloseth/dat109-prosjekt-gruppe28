@@ -71,13 +71,29 @@ public class Forelesning {
 	}
 		
 	public double getResultat() {
-		double sum = 0;
-		for (Tilbakemelding t : tilbakemeldinger) {
-			sum += t.getTilbakemelding();
-		}
-		resultat = sum / (double) tilbakemeldinger.size();
 		return resultat;
+	    
 	}
+
+	
+	public void oppdaterResultat(int tall) {
+	    double sum = 0;
+	    int antall = tilbakemeldinger.size();
+
+	    for (Tilbakemelding t : tilbakemeldinger) {
+	        sum += t.getTilbakemelding();
+	    }
+
+	    // Legg til ekstra vurdering
+	    sum += tall;
+	    antall += 1;
+
+	    double gjennomsnitt = (antall > 0) ? sum / antall : 0;
+
+	    resultat = gjennomsnitt;
+	}
+
+
 
 	public boolean giVurdering(int tilbakemelding, Person student) {
 		return  tilbakemeldinger.add(new Tilbakemelding(tilbakemelding, student));

@@ -17,6 +17,7 @@
 	<form action="/vurderingskjema" method="post">
 		
 		<p>emnenr: ${emne.emnenr}</p>
+		<p>forelesningsnr: ${forelesningsnr}</p>
 
 		
 	    <input type="hidden" name="student" value="${student.brukernavn}" />

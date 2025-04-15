@@ -34,6 +34,7 @@ public class Tilbakemelding {
 	public Tilbakemelding(int tilbakemelding, Person student, Forelesning forelesning) {
 		this.tilbakemelding = tilbakemelding;
 		this.student = student;
+		this.forelesning = forelesning;
 	}
 
 	public Tilbakemelding() {

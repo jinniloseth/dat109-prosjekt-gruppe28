@@ -46,6 +46,7 @@ public class EmneController {
 	@PostMapping("/innlogging")
 	public String loggInn(RedirectAttributes ra, HttpSession hs, @RequestParam("brukernavn") int brukernavn,
 			@RequestParam(required = false) Integer emnenr, @RequestParam(required = false) Integer forelesningnr) {
+		
 		Person person = personRepo.findById(brukernavn).orElse(null);
 		
 		
@@ -126,7 +127,10 @@ public class EmneController {
 			forelesning.registrerTilbakemelding(t);
 			tilbakemeldingRepo.save(t);
 
-			forelesning.getResultat(); // setter resultat
+			System.out.println("RESULTATET BLIR: " + forelesning.getResultat() + " I FORELESNINGNR " + forelesning.getForelesningnr());
+			forelesning.oppdaterResultat(t.getTilbakemelding()); // setter resultat
+			System.out.println("RESULTATET BLE: " + forelesning.getResultat() + " I FORELESNINGNR " + forelesning.getForelesningnr());
+			
 			forelesningRepo.save(forelesning);
 		}
 

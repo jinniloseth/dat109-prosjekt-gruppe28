@@ -9,6 +9,7 @@
     <form action="innlogging" method="post">
 		
 		<p>emnenr: ${emnenr}</p>
+		<p>forelesningsnr: ${forelesningsnr}</p>
 		
 		<input type="hidden" name="emnenr" value="${emnenr}" />
 		<input type="hidden" name="forelesningnr" value="${forelesningsnr}" />
