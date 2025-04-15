@@ -21,6 +21,11 @@ public class Emne {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int emnenr;
 
+	@Override
+	public String toString() {
+		return "Emne [emnenr=" + emnenr + "]";
+	}
+
 	private String emnekode;
 	private String semester;
 	private String navn;

@@ -1,12 +1,12 @@
 package no.hvl.dat109.kontrollere;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -15,8 +15,11 @@ import jakarta.servlet.http.HttpSession;
 import no.hvl.dat109.Emne;
 import no.hvl.dat109.Forelesning;
 import no.hvl.dat109.Person;
+import no.hvl.dat109.Tilbakemelding;
 import no.hvl.dat109.repo.EmneRepo;
+import no.hvl.dat109.repo.ForelesningRepo;
 import no.hvl.dat109.repo.PersonRepo;
+import no.hvl.dat109.repo.TilbakemeldingRepo;
 
 @Controller
 public class EmneController {
@@ -26,6 +29,12 @@ public class EmneController {
 
 	@Autowired
 	PersonRepo personRepo;
+
+	@Autowired
+	ForelesningRepo forelesningRepo;
+
+	@Autowired
+	TilbakemeldingRepo tilbakemeldingRepo;
 
 	@GetMapping("/innlogging")
 	public String visInnlogging(Model model, @RequestParam(required = false) Integer emnenr, Integer forelesningnr) {
@@ -37,13 +46,18 @@ public class EmneController {
 	@PostMapping("/innlogging")
 	public String loggInn(RedirectAttributes ra, HttpSession hs, @RequestParam("brukernavn") int brukernavn,
 			@RequestParam(required = false) Integer emnenr, @RequestParam(required = false) Integer forelesningnr) {
-		
 		Person person = personRepo.findById(brukernavn).orElse(null);
+		
+		
+		System.out.println("Emnenr er " + emnenr);
+		
 		
 		Emne emne = (emnenr != null) ? emneRepo.findById(emnenr).orElse(null) : null;
 
-		System.out.println("Person:" + person);
-		System.out.println(brukernavn);
+		
+		System.out.println("Henter emne med emnenr INNLOGINGPOSTMAPPING = " + emnenr);
+		
+
 		
 		if (person != null) {
 			if (person.erLektor()) {
@@ -52,7 +66,13 @@ public class EmneController {
 			} else {
 				ra.addFlashAttribute("student", person);
 				ra.addFlashAttribute("emne", emne);
+				System.out.println("Emne som blir satt i session: " + emne.toString());
 				ra.addFlashAttribute("forelesningnr", forelesningnr);
+				hs.setAttribute("student", person);
+				hs.setAttribute("emne", emne);
+				hs.setAttribute("forelesningnr", forelesningnr);
+				System.out.println("Emne som blir satt i session: " + emne);
+
 				return "redirect:vurderingskjema";
 			}
 		}
@@ -60,23 +80,57 @@ public class EmneController {
 	}
 
 	@GetMapping("/vurderingskjema")
-	public String hentVurdering(Model model, @ModelAttribute Person student, @ModelAttribute Emne emne,
-			@ModelAttribute Integer forelesningnr) {
+	public String hentVurdering(Model model, HttpSession session) {
+		Person student = (Person) session.getAttribute("student");
+		Emne emne = (Emne) session.getAttribute("emne");
+		Integer forelesningnr = (Integer) session.getAttribute("forelesningnr");
+
 		model.addAttribute("student", student);
 		model.addAttribute("emne", emne);
 		model.addAttribute("forelesningnr", forelesningnr);
+
 		return "vurderingskjema";
 	}
 
 	@PostMapping("/vurderingskjema")
-	public String giVurdering(Model model, Person student, Emne emne, Integer forelesningnr, String vurdering) {
-		if (student != null && emne != null && forelesningnr != null && !student.erLektor() && student.harEmne(emne)
-				&& 0 <= forelesningnr && forelesningnr < emne.antallForelesninger()) {
+	public String giVurdering(Model model,
+			@RequestParam("vurdering") String vurdering,
+			@RequestParam("student") Integer studentId,
+			@RequestParam("emne") Integer emneId,
+			@RequestParam("forelesningnr") Integer forelesningnr) {
+
+		Person student = personRepo.findById(studentId).orElse(null);
+		Emne emne = emneRepo.findById(emneId).orElse(null);
+		Optional<Forelesning> forelesningOpt = forelesningRepo.findById(forelesningnr);
+
+		System.out.println("STUDENT:" + student.toString());
+		System.out.println("EMNE: " + emne.toString());
+		System.out.println("FORLESNING: " + forelesningOpt.toString());
+		
+
+		if (student != null && emne != null && forelesningOpt.isPresent() && !student.erLektor()) {
+
+			Forelesning forelesning = forelesningOpt.get();
+			System.out.println("FORELENSISNSINSNSINFG: " + forelesning.toString());
+			
 			int v = Integer.parseInt(vurdering);
-			emne.giVurdering(forelesningnr, v, student);
-			return "redirect:innlogging"; // Implementere godkjenning
+
+			
+			
+			Tilbakemelding t = new Tilbakemelding(v, student, forelesning);
+			
+			System.out.println("FØR LAGRING");
+			System.out.println("Tilbakemelding: " + t.toString());
+			
+			
+			forelesning.registrerTilbakemelding(t);
+			tilbakemeldingRepo.save(t);
+
+			forelesning.getResultat(); // setter resultat
+			forelesningRepo.save(forelesning);
 		}
-		return "redirect:innlogging"; // Implementere feilmelding
+
+		return "redirect:innlogging";
 	}
 
 	@GetMapping("/emneoversikt")
@@ -84,7 +138,6 @@ public class EmneController {
 		Person lektor = (Person) hs.getAttribute("lektor");
 		if (lektor != null && lektor.erLektor()) {
 			model.addAttribute("lektor", lektor);
-
 			List<Emne> emner = lektor.getEmner();
 			model.addAttribute("emner", emner);
 			return "emneoversikt";
@@ -102,14 +155,4 @@ public class EmneController {
 		}
 		return "emneoversikt";
 	}
-
-//	private Emne finnEmne(String emnekode, String semester) {
-//		List<Emne> emner = emneRepo.findAll();
-//		for (Emne e : emner) {
-//			if (emnekode.equals(e.getEmnekode()) && semester.equals(e.getSemester())) {
-//				return e;
-//			}
-//		}
-//		return null;
-//	}
 }

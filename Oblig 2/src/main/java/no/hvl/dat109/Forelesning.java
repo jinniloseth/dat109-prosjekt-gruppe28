@@ -1,13 +1,15 @@
 package no.hvl.dat109;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
@@ -20,10 +22,14 @@ public class Forelesning {
 	private LocalDate dato;
 	private String tittel;
 
-	@OneToMany
+	@OneToMany(mappedBy = "forelesning", cascade = CascadeType.ALL)
 	private List<Tilbakemelding> tilbakemeldinger;
-	
+
 	private double resultat;
+	
+	 @ManyToOne
+	 @JoinColumn(name = "emne_emnenr") // Matcher SQL: `emne_emnenr INTEGER REFERENCES emne(emnenr)`
+	private Emne emne;
 	
 	public Forelesning() {
 		
@@ -59,6 +65,11 @@ public class Forelesning {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Forelesning [forelesningnr=" + forelesningnr + "]";
+	}
+		
 	public double getResultat() {
 		double sum = 0;
 		for (Tilbakemelding t : tilbakemeldinger) {

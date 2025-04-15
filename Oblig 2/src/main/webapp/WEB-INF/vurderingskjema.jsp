@@ -12,22 +12,32 @@
 </head>
 
 <body>
-
     <h2>Vurder forelesningen!</h2>
 
-    <form action="/vurderingskjema" method="post">
-        <table>
-            <tr>
+	<form action="/vurderingskjema" method="post">
+		
+		<p>emnenr: ${emne.emnenr}</p>
+
+		
+	    <input type="hidden" name="student" value="${student.brukernavn}" />
+		<input type="hidden" name="emne" value="${emne.emnenr}" />
+	    <input type="hidden" name="forelesningnr" value="${forelesningnr}" />
+
+	    <table>
+	        <tr>
 				<c:forEach var="i" begin="1" end="5">
-				    <td>
+				    <td style="text-align: center;">
 				        <label>
-				            <input type="radio" name="vurdering" value="${i}" style="display:none;" onchange="this.form.submit()">
-				        	<img src="bilder/${i}.png" alt="Vurdering ${i}" style="cursor:pointer;">
-				    	</label>
-					</td>
+				            <img src="/bilder/${i}.png" alt="Vurdering ${i}" class="vurderingsbilde"><br/>
+				            <input type="radio" name="vurdering" value="${i}" ${i == 1 ? "required" : ""}>
+				        </label>
+				    </td>
 				</c:forEach>
-            </tr>
-        </table>
-    </form>
+	        </tr>
+	    </table>
+	    <br/>
+	    <button type="submit">Send vurdering</button>
+	</form>
+
 </body>
 </html>
