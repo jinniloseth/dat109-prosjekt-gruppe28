@@ -13,11 +13,14 @@ import jakarta.persistence.OneToMany;
 @Entity
 public class Forelesning {
 
-	// en forelesning må ha en lektor?
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int forelesningnr;
+	
 	private LocalDate dato;
 	private String tittel;
 
-	@OneToMany(mappedBy = "forelesning")
+	@OneToMany
 	private List<Tilbakemelding> tilbakemeldinger;
 	private double resultat;
 
@@ -25,6 +28,10 @@ public class Forelesning {
 		this.dato = dato;
 		this.tittel = tittel;
 		resultat = 0;
+	}
+	
+	public int getForelesningnr() {
+		return forelesningnr;
 	}
 
 	public LocalDate getDato() {

@@ -24,13 +24,12 @@ public class Emne {
 	private String emnekode;
 	private String semester;
 	private String navn;
-	
-	@ManyToMany
+
 	private List<Person> lektorer;
-	
+
 	private double resultat;
 
-	@OneToMany(mappedBy = "emne")
+	@OneToMany
 	List<Forelesning> forelesninger;
 
 	public Emne(String emnekode, String navn, String semester, List<Person> lektorer, List<Forelesning> forelesninger) {
@@ -40,9 +39,6 @@ public class Emne {
 		this.lektorer = lektorer;
 		this.forelesninger = forelesninger;
 		this.resultat = 0;
-	}
-	public Emne() {
-		
 	}
 
 	public double getResultat() {
@@ -55,8 +51,10 @@ public class Emne {
 	}
 
 	public double getResultat(int forelesningnr) {
-		if (forelesningnr < forelesninger.size()) {
-			return forelesninger.get(forelesningnr - 1).getResultat();
+		Forelesning f = forelesninger.stream().filter(a -> a.getForelesningnr() == forelesningnr).findAny()
+				.orElse(null);
+		if (f != null) {
+			return f.getResultat();
 		}
 		return 0;
 	}
@@ -78,8 +76,12 @@ public class Emne {
 	}
 
 	public boolean giVurdering(int forelesningnr, int tilbakemelding, Person student) {
-		if (0 < forelesningnr && forelesningnr < forelesninger.size() && student != null && !student.erLektor() && student.harEmne(this)) {
-			return forelesninger.get(forelesningnr - 1).giVurdering(tilbakemelding, student);
+		if (0 < forelesningnr && forelesningnr < forelesninger.size() && student != null && !student.erLektor()
+				&& student.harEmne(this)) {
+			Forelesning f = forelesninger.stream().filter(a -> a.getForelesningnr() == forelesningnr).findAny()
+					.orElse(null);
+			if (f != null)
+				return f.giVurdering(tilbakemelding, student);
 		}
 		return false;
 	}

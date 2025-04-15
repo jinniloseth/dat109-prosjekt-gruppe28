@@ -13,7 +13,6 @@ public class Tilbakemelding {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int tilbakemeldingID;
 
-	@ManyToOne
 	private int tilbakemelding;
 
 	@ManyToOne
