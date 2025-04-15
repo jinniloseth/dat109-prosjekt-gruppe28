@@ -24,7 +24,7 @@ class ForelesningTest {
     @BeforeEach
     void setUp() {
         // Setup sample data for the tests
-        forelesning = new Forelesning("Java Basics", LocalDate.of(2025, 4, 4));
+        forelesning = new Forelesning(LocalDate.of(2025, 4, 4), "Java Basics");
 
         // Create students
         student1 = new Person(1, false);
