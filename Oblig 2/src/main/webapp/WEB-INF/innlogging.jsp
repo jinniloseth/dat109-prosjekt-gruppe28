@@ -11,12 +11,23 @@
 		<p>emnenr: ${emnenr}</p>
 		<p>forelesningsnr: ${forelesningsnr}</p>
 		
+		
+		
 		<input type="hidden" name="emnenr" value="${emnenr}" />
 		<input type="hidden" name="forelesningnr" value="${forelesningsnr}" />
 
         <label for="brukernavn">Brukernavn:</label>
         <input type="text" id="brukernavn" name="brukernavn" required /><br><br>
         <button type="submit">Logg inn</button>
+		
+		<c:if test="${not empty resultat}">
+			<p style="color: green;">${resultat}</p>
+		</c:if>
+			
+		<c:if test="${not empty resultat}">
+			<p style="color: red;">${feilmelding}</p>
+		</c:if>
+
     </form>
 </body>
 </html>

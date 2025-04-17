@@ -17,12 +17,12 @@
 	<form action="/vurderingskjema" method="post">
 		
 		<p>emnenr: ${emne.emnenr}</p>
-		<p>forelesningsnr: ${forelesningsnr}</p>
+		<p>forelesningsnr: ${forelesning.forelesningnr}</p>
 
 		
 	    <input type="hidden" name="student" value="${student.brukernavn}" />
 		<input type="hidden" name="emne" value="${emne.emnenr}" />
-	    <input type="hidden" name="forelesningnr" value="${forelesningnr}" />
+	    <input type="hidden" name="forelesning" value="${forelesning.forelesningnr}" />
 
 	    <table>
 	        <tr>

@@ -6,27 +6,32 @@
     <link rel="stylesheet" href="/css/css.css" />
 </head>
 <body>
-    <h1>Dine emner</h1>
+    <h1>Dine emner - ${lektor.brukernavn}</h1>
     <div class="modul-container">
-        <c:forEach var="emne" items="${emner}">
-            <a href="forelesningsoversikt?emne=${emne}" style="text-decoration: none;">
-                <div class="modul">
-                    <div class="modul-header"></div>
-                    <div class="modul-innhold">
-                        <div class="fagnavn">${emne.navn}</div>
-                        <div class="kode">${emne.emnekode}</div>
-                        <div class="semester">${emne.semester}</div>
-						<div class="resultat">${emne.resultat}</div>
-                        <div class="ikoner">
-                            <div class="ikon"></div>
-                            <div class="ikon"></div>
-                            <div class="ikon"></div>
-                        </div>
-						
-                    </div>
-                </div>
-            </a>
-        </c:forEach>
+		<c:forEach var="emne" items="${emner}">
+		            <h2>${emne.navn} ( ${emne.emnekode} - ${emne.semester} )</h2>
+
+		            <table border="1" style="margin-bottom: 20px;">
+		                <thead>
+		                    <tr>
+		                        <th>Forelesningsnr</th>
+		                        <th>Dato</th>
+		                        <th>Tittel</th>
+		                        <th>Resultat</th>
+		                    </tr>
+		                </thead>
+		                <tbody>
+		                    <c:forEach var="f" items="${emne.forelesninger}">
+		                        <tr>
+		                            <td>${f.forelesningnr}</td>
+		                            <td>${f.dato}</td>
+		                            <td>${f.tittel}</td>
+		                            <td>${f.resultat}</td>
+		                        </tr>
+		                    </c:forEach>
+		                </tbody>
+		            </table>
+		        </c:forEach>
     </div>
 </body>
 </html>

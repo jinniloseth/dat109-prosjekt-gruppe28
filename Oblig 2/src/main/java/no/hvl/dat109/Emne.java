@@ -1,18 +1,14 @@
 package no.hvl.dat109;
 
-import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import no.hvl.dat109.repo.EmneRepo;
+import jakarta.persistence.OrderBy;
 
 @Entity
 public class Emne {
@@ -30,9 +26,8 @@ public class Emne {
 	private String semester;
 	private String navn;
 
-	private double resultat;
-
-	@OneToMany
+	@OneToMany(mappedBy = "emne", fetch = FetchType.EAGER)
+	@OrderBy("dato ASC")
 	List<Forelesning> forelesninger;
 	
 	public Emne() {
@@ -44,16 +39,6 @@ public class Emne {
 		this.navn = navn;
 		this.semester = semester;
 		this.forelesninger = forelesninger;
-		this.resultat = 0;
-	}
-
-	public double getResultat() {
-		double sum = 0;
-		for (Forelesning f : forelesninger) {
-			sum += f.getResultat();
-		}
-		resultat = sum / (double) forelesninger.size();
-		return resultat;
 	}
 
 	public double getResultat(int forelesningnr) {
@@ -77,17 +62,6 @@ public class Emne {
 		return semester;
 	}
 
-	public boolean giVurdering(int forelesningnr, int tilbakemelding, Person student) {
-		if (0 < forelesningnr && forelesningnr < forelesninger.size() && student != null && !student.erLektor()
-				&& student.harEmne(this)) {
-			Forelesning f = forelesninger.stream().filter(a -> a.getForelesningnr() == forelesningnr).findAny()
-					.orElse(null);
-			if (f != null)
-				return f.giVurdering(tilbakemelding, student);
-		}
-		return false;
-	}
-
 	public String getEmnekode() {
 		return emnekode;
 	}
@@ -98,5 +72,9 @@ public class Emne {
 
 	public int antallForelesninger() {
 		return forelesninger.size();
+	}
+
+	public List<Forelesning> getForelesninger() {
+		return forelesninger;
 	}
 }

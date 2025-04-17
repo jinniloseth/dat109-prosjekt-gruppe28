@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -22,11 +23,15 @@ public class Person {
 	private int brukernavn;
 
 	@Column(name = "er_lektor", nullable = false)
-	private boolean erLektor = false;
+	private boolean erLektor;
 
 
-	@ManyToMany
-	@JoinTable(name = "person-emne", joinColumns = @JoinColumn(name = "brukernavn"), inverseJoinColumns = @JoinColumn(name = "emnekode"))
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+	    name = "person_emne",
+	    joinColumns = @JoinColumn(name = "brukernavn"),
+	    inverseJoinColumns = @JoinColumn(name = "emnenr")
+	)
 	private List<Emne> emner;
 
 	public Person() {
