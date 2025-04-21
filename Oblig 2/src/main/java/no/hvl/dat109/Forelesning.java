@@ -39,6 +39,10 @@ public class Forelesning {
 		this.dato = dato;
 		this.tittel = tittel;
 	}
+	
+	public Emne getEmne() {
+		return emne;
+	}
 
 	public int getForelesningnr() {
 		return forelesningnr;

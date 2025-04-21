@@ -1,5 +1,6 @@
 package no.hvl.dat109.kontrollere;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,37 +135,40 @@ public class EmneController {
 		System.out.println("STUDENT:" + student.toString());
 		System.out.println("EMNE: " + emne.toString());
 		System.out.println("FORLESNING: " + forelesning.toString());
+		
+		if (forelesning.getDato().isBefore(LocalDate.now()) || forelesning.getDato().isEqual(LocalDate.now())) {
+			if (student != null && emne != null && forelesning != null && !student.erLektor()) {
 
-		if (student != null && emne != null && forelesning != null && !student.erLektor()) {
+				student.getEmner().stream().forEach(System.out::println);
 
-			student.getEmner().stream().forEach(System.out::println);
+				System.out.println("FORELENSISNSINSNSINFG: " + forelesning.toString());
 
-			System.out.println("FORELENSISNSINSNSINFG: " + forelesning.toString());
+				int v = Integer.parseInt(vurdering);
 
-			int v = Integer.parseInt(vurdering);
+				System.out.println("FØR LAGRING");
+				System.out.println("Tilbakemelding: " + vurdering);
+				System.out.println("forelesnings: " + forelesning.toString());
+				System.out.println("emne: " + emne.toString());
 
-			System.out.println("FØR LAGRING");
-			System.out.println("Tilbakemelding: " + vurdering);
-			System.out.println("forelesnings: " + forelesning.toString());
-			System.out.println("emne: " + emne.toString());
+				Tilbakemelding t = new Tilbakemelding(v, student, forelesning);
 
-			Tilbakemelding t = new Tilbakemelding(v, student, forelesning);
+				forelesning.setEmne(emne);
+				forelesning.giVurdering(t, student, forelesning);
 
-			forelesning.setEmne(emne);
-			forelesning.giVurdering(t, student, forelesning);
+				if (emne.getForelesninger() != null && !emne.getForelesninger().isEmpty()) {
+					double nyttResultat = emne.getForelesninger().stream().mapToDouble(Forelesning::getResultat).average()
+							.orElse(0);
+					forelesning.setResultat(nyttResultat);
+				}
 
-			if (emne.getForelesninger() != null && !emne.getForelesninger().isEmpty()) {
-				double nyttResultat = emne.getForelesninger().stream().mapToDouble(Forelesning::getResultat).average()
-						.orElse(0);
-				forelesning.setResultat(nyttResultat);
+				ra.addFlashAttribute("resultat",
+						"Registrert: <br>" + "Student: " + student.getBrukernavn() + "<br>" + "Vurdering gitt: " + v
+								+ "<br>" + "Emne: " + emne.getEmnekode() + "<br>" + "Forelesningsnr: "
+								+ forelesning.getForelesningnr());
+
+				forelesningRepo.save(forelesning);
 			}
 
-			ra.addFlashAttribute("resultat",
-					"Registrert: <br>" + "Student: " + student.getBrukernavn() + "<br>" + "Vurdering gitt: " + v
-							+ "<br>" + "Emne: " + emne.getEmnekode() + "<br>" + "Forelesningsnr: "
-							+ forelesning.getForelesningnr());
-
-			forelesningRepo.save(forelesning);
 		}
 
 		return "redirect:innlogging";
