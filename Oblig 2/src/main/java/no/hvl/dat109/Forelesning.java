@@ -28,7 +28,7 @@ public class Forelesning {
 	private double resultat;
 
 	@ManyToOne
-	@JoinColumn(name = "emne") // Matcher SQL: `emne_emnenr INTEGER REFERENCES emne(emnenr)`
+	@JoinColumn(name = "emne")
 	private Emne emne;
 
 	public Forelesning() {

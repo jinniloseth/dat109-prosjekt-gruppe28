@@ -169,6 +169,9 @@ public class EmneController {
 				forelesningRepo.save(forelesning);
 			}
 
+		} else {
+			ra.addFlashAttribute("feilmelding", "Forelesningen du ønsker å legge inn vurdering på har ikke hvert enda");
+			return "redirect:innlogging";
 		}
 
 		return "redirect:innlogging";
